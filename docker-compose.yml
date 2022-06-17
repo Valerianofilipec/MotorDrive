@@ -27,7 +27,7 @@ services:
 
     volumes:
       - db_vol:/usr/app/mysql
-    network_mode: "host"
+    #network_mode: "host"
 
   app:
     container_name: motorapp
@@ -39,7 +39,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    network_mode: "host"
+    #network_mode: "host"
 
 volumes:
   db_vol:

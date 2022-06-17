@@ -1,0 +1,8 @@
+https://www.luiztools.com.br/post/tutorial-de-migrations-com-nodejs-e-sequelize/
+
+https://stackoverflow.com/questions/44012932/sequelize-geospatial-query-find-n-closest-points-to-a-location
+
+https://gis.stackexchange.com/questions/31628/find-features-within-given-coordinates-and-distance-using-mysql
+
+https://sequelize.org/api/v6/class/src/data-types.js~geography
+
