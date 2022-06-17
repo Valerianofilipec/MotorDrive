@@ -14,7 +14,7 @@ const test_connection = async ()=>{
         console.error('Unable to connect to the database:', error);}
 }
 
-// enviroments variables
+// environment variables
 const port = process.env.APP_PORT;
 
 //app.use(cors());
