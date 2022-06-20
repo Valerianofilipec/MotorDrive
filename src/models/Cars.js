@@ -1,16 +1,14 @@
+/*
+const db = require('./index.js')
+const sequelize = db.sequelize;
+const Sequelize = db.Sequelize;
+const Model = Sequelize.Model;
+*/
+
+const {Sequelize} = require("sequelize");
 const  sequelize = require("../database/connection.js");
-const Sequelize = require("sequelize").Sequelize;
-const Model = require("sequelize").Model;
 
-class Cars extends Model{}
-
-Cars.init({
-    id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        primaryKey: true
-    },
+const Cars = sequelize.define('Cars',{
     brand: {
         type: Sequelize.STRING,
         notEmpty: true,
@@ -28,20 +26,26 @@ Cars.init({
         unique: true
     },
     geolocation: {
-        type: Sequelize.GEOGRAPHY('POINT'),
+        type: Sequelize.GEOMETRY('POINT'),
         allowNull: false,
-        //defaultValue: { type: 'Point', coordinates: [41.1663061, -8.6490692]} //coordanates of the company
+        //defaultValue: (41.1663061, -8.6490692) //coordanates of the company
     },
     available: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
-        defaultValue: false, //it must be associated to a driver, when created!
+        defaultValue: true, //it must be associated to a driver, when created!
+    },
+    driverId: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+            model: 'Drivers',
+            key: 'id'
+        }
     },
     
 }, {
     // Other model options go here
-    sequelize,
-    modelName: 'Cars',
     timestamps: true,
 });
 

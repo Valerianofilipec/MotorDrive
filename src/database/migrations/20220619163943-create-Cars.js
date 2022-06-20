@@ -28,11 +28,13 @@ module.exports = {
     geolocation: {
         type: Sequelize.GEOMETRY('POINT'),
         allowNull: false,
+        notEmpty: true
+        //defaultValue: (41.1663061, -8.6490692) //coordanates of the company
     },
     available: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
-        defaultValue: false, //it must be associated to a driver, when created!
+        defaultValue: true, //it must be associated to a driver, when created!
     },
     createAt:{
         type: Sequelize.DATE,

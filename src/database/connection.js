@@ -1,3 +1,6 @@
+//const db = require('./config/config.js');
+//const Sequelize = db.sequelize;
+
 const Sequelize = require("sequelize").Sequelize;
 require("dotenv/config");
 
