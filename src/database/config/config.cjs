@@ -1,4 +1,5 @@
-import "dotenv/config";
+require("dotenv/config");
+
 //env variables
 const dbDialect = process.env.DB_DIALECT
 const dbName = process.env.DB_NAME ;
@@ -13,7 +14,26 @@ module.exports = {
     password: dbPassword,
     database: dbName,
     host: dbHost,
+    port: dbPort,
     dialect: dbDialect,
     logging: true
+  },
+  test: {
+    username: dbUser,
+    password: dbPassword,
+    database: dbName,
+    host: dbHost,
+    port: dbPort,
+    dialect: dbDialect,
+    logging: true
+  },
+  production: {
+    username: dbUser,
+    password: dbPassword,
+    database: dbName,
+    host: dbHost,
+    port: dbPort,
+    dialect: dbDialect,
+    logging: false
   }
-}
+};

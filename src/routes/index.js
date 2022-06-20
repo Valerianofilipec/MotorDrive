@@ -1,10 +1,8 @@
-import {Router} from "express";
-import {carRouter} from "./carRouter.js";
-import { driverRouter } from "./driverRouter.js";
-
-const routes = Router();
+const carRouter = require('./carRouter.js');
+const driverRouter = require('./driverRouter.js');
+const routes = require('express').Router();
 
 routes.use("/cars", carRouter);
 routes.use("/driver", driverRouter);
 
-export {routes};
+module.exports = routes;

@@ -1,6 +1,4 @@
-import { Router } from "express";
-const driverRouter = Router();
-
+const driverRouter = require('express').Router();
 
 //test
 driverRouter.get("/", (req, res) => res.send({message:"driver router it's OK!"}));
@@ -14,4 +12,4 @@ driverRouter.put("/:id");
 //delete driver (by ID)
 driverRouter.delete("/:id");
 
-export {driverRouter};
+module.exports = driverRouter;

@@ -1,5 +1,4 @@
-import { Router} from "express";
-const carRouter = Router();
+const carRouter = require('express').Router();
 
 
 //test
@@ -24,4 +23,4 @@ carRouter.get("/", (req, res) => res.send({message:"car router it's OK!"}));
 //delete car (by ID)
 
 
-export {carRouter};
+module.exports = carRouter;

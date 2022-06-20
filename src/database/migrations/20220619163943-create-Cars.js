@@ -1,11 +1,9 @@
-const  sequelize = require("../database/connection.js");
-const Sequelize = require("sequelize").Sequelize;
-const Model = require("sequelize").Model;
+'use strict';
 
-class Cars extends Model{}
-
-Cars.init({
-    id: {
+module.exports = {
+  async up (queryInterface, Sequelize) {
+    await queryInterface.createTable('Cars', { 
+      id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
@@ -28,21 +26,30 @@ Cars.init({
         unique: true
     },
     geolocation: {
-        type: Sequelize.GEOGRAPHY('POINT'),
+        type: Sequelize.GEOMETRY('POINT'),
         allowNull: false,
-        //defaultValue: { type: 'Point', coordinates: [41.1663061, -8.6490692]} //coordanates of the company
     },
     available: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false, //it must be associated to a driver, when created!
     },
-    
-}, {
-    // Other model options go here
-    sequelize,
-    modelName: 'Cars',
-    timestamps: true,
-});
+    createAt:{
+        type: Sequelize.DATE,
+        allowNull: false
+    },
+    updateAt: {
+        type: Sequelize.DATE,
+        allowNull: false
+    }
+    },
+    {
+      timestamps: true
+    }
+);
+  },
 
-module.exports = Cars;
+  async down (queryInterface, Sequelize) {
+    return await queryInterface.dropTable('Cars');
+  }
+};

@@ -1,10 +1,8 @@
 //import cors from "cors";
-import "dotenv/config"; 
-import { sequelize } from "./database/connection.js";
-import express from "express";
-import {routes} from "./routes/index.js";
-
-import { Cars } from "./models/Cars.js";//Apagar
+require ("dotenv/config"); 
+const express = require("express");
+const sequelize = require("./database/connection.js");
+const routes = require("./routes/index.js");
 
 const app = express();
 
@@ -24,8 +22,6 @@ app.use(express.json());
 app.use(routes);
 
 app.listen(port,()=>{
-    console.log(` MotorDrive's Server running! ${port}` );
-    test_connection();
-    
-    console.log(Cars === sequelize.models.Cars);//Apagar
+    console.log(`MotorDrive's Server running! ${port}` );
+    test_connection(); 
 });

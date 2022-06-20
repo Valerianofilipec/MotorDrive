@@ -1,5 +1,5 @@
-import { Sequelize } from "sequelize";
-import "dotenv";
+const Sequelize = require("sequelize").Sequelize;
+require("dotenv/config");
 
 //env variables
 const dbDialect = process.env.DB_DIALECT
@@ -15,4 +15,4 @@ const  sequelize = new Sequelize(dbName, dbUser, dbPassword,{
     port: dbPort,
 });
 
-export {sequelize};
+module.exports = sequelize;
