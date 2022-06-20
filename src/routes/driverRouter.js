@@ -1,15 +1,13 @@
 const driverRouter = require('express').Router();
-
-//test
-driverRouter.get("/", (req, res) => res.send({message:"driver router it's OK!"}));
+const DriversController = require('../controllers/DriversController.js');
 
 //create driver
-driverRouter.post("/");
+driverRouter.post("/", DriversController.createDriver);
 
 //update driver (by ID)
-driverRouter.put("/:id");
+driverRouter.put("/:id", DriversController.updateDriver);
 
 //delete driver (by ID)
-driverRouter.delete("/:id");
+driverRouter.delete("/:id", DriversController.deleteDriver);
 
 module.exports = driverRouter;

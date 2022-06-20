@@ -1,8 +1,8 @@
 const Cars = require('../models/Cars');
 
-module.exports = new class CarsController {
+module.exports = {
     //create a new car with(out) the driver id
-    async create(req, res){
+    async createCar(req, res){
         const {brand, model, plate_number, geolocation, available, driverId} = req.body;
         try {
             const car = await Cars.create({
@@ -16,13 +16,13 @@ module.exports = new class CarsController {
             return res.status(201).json(car);
             
         } catch (error) {
-            console.log(error);
+            return res.status(500).json({error: 'Error creating car'});
         }
 
-    }
+    },
 
     //update a car with(out) the driver id
-    async update(req, res){
+    async updateCar(req, res){
         const {id} = req.params;
         const car = await Cars.findByPk(id);
 
@@ -38,10 +38,9 @@ module.exports = new class CarsController {
         }
         return res.status(200).json(carUpdated);
 
-    }
+    },
 
-    //delete a car by id
-    async delete(req, res){
+    async deleteCar(req, res){
         const {id} = req.params;
         const car = await Cars.findByPk(id);
 
@@ -54,9 +53,8 @@ module.exports = new class CarsController {
             return res.status(500).json({error: 'Error deleting car'});
         }
 
-    }
+    },
 
-    //get all cars by brand
     async showCarsByBrand(req, res){
         const {brand} = req.params;
         try {
@@ -69,9 +67,8 @@ module.exports = new class CarsController {
             return res.status(500).json({error: 'Error getting cars'});
         }
         return res.status(200).json(cars);
-    }
+    },
 
-    //get all cars locations
     async showCarsLocations(req, res){
         try{
             var carsLocations = await Cars.findAll({
@@ -81,8 +78,28 @@ module.exports = new class CarsController {
             return res.status(500).json({error: 'Error getting cars'});
         }
         return res.status(200).json(carsLocations);
-    }
+    },
 
     //get all cars by proximity (latitude, longitude, radius)
-    async showCarsByProximity(req, res){}
+    async showCarsByProximity(req, res){
+        const {latitude, longitude, radius} = req.query;
+        try {
+            var cars = await Cars.findAll({
+                where: {
+                    geolocation: {
+                        $near: {
+                            $geometry: {
+                                type: 'Point',
+                                coordinates: [latitude, longitude]
+                            },
+                            $maxDistance: radius
+                        }
+                    }
+                }
+            });
+        } catch (error) {
+            return res.status(500).json({error: 'Error getting cars'});
+        }
+        return res.status(200).json(cars);
+    },
 }

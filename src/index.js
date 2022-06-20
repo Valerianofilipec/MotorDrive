@@ -23,13 +23,12 @@ app.listen(port,async()=>{
     console.log(Cars === sequelize.models.Cars);//Apagar
     console.log(Drivers === sequelize.models.Drivers);//Apagar
     console.log(Managers === sequelize.models.Managers);//Apagar
-    const novoManager = await Managers.create({
+    /*const novoManager = await Managers.create({
         name: "John Doe",
         email: "johnD@gmail.com",
         password: "123456",
-    });
+    });*/
 
-    console.log(novoManager);//Apagar
     /*
     Drivers.create({
         name: "João",
