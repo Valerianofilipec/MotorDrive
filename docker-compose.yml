@@ -39,6 +39,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    #entrypoint: ["/bin/bash", "-c", "npx", "run", "sequelize-cli", "db:migrate"]
     #network_mode: "host"
 
 volumes:

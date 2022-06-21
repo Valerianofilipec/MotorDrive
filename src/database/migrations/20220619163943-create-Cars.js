@@ -23,24 +23,25 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
         notEmpty: true,
-        unique: true
+        unique: true,
+        defaultValue: 'AAA-0000'
     },
     geolocation: {
         type: Sequelize.GEOMETRY('POINT'),
         allowNull: false,
-        notEmpty: true
-        //defaultValue: (41.1663061, -8.6490692) //coordanates of the company
+        notEmpty: true,
+        //defaultValue: Point(41.1663061,-8.6490692)//coordanates of the company
     },
     available: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
-        defaultValue: true, //it must be associated to a driver, when created!
+        notEmpty: true,
     },
-    createAt:{
+    createdAt:{
         type: Sequelize.DATE,
         allowNull: false
     },
-    updateAt: {
+    updatedAt: {
         type: Sequelize.DATE,
         allowNull: false
     }
@@ -48,6 +49,7 @@ module.exports = {
     {
       timestamps: true
     }
+    
 );
   },
 

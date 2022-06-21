@@ -5,6 +5,7 @@ const Sequelize = db.Sequelize;
 const Model = Sequelize.Model;
 */
 
+
 const {Sequelize} = require("sequelize");
 const  sequelize = require("../database/connection.js");
 
@@ -28,7 +29,8 @@ const Cars = sequelize.define('Cars',{
     geolocation: {
         type: Sequelize.GEOMETRY('POINT'),
         allowNull: false,
-        //defaultValue: (41.1663061, -8.6490692) //coordanates of the company
+        notEmpty: true,
+        //defaultValue: sequelize.literal(`ST_GeomFromText('POINT(0 0)')`) //coordanates of the company
     },
     available: {
         type: Sequelize.BOOLEAN,
@@ -44,9 +46,12 @@ const Cars = sequelize.define('Cars',{
         }
     },
     
+    
 }, {
     // Other model options go here
     timestamps: true,
-});
+}
+
+);
 
 module.exports = Cars;

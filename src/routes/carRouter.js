@@ -1,6 +1,11 @@
 const carRouter = require('express').Router();
 const CarsController = require('../controllers/CarsController.js');
 
+//test
+carRouter.get('/', (req, res) => {
+    res.send({message:'carRouter'});
+}
+);
 
 //create car (by driver & car IDs)
 carRouter.post('/', CarsController.createCar);
