@@ -6,6 +6,24 @@
         "type": "Point",
         "coordinates": [41.1663061,-8.6490692]
     }
+},
+{
+	"brand":"Lexus",
+	"model":"XXX",
+	"plate_number": "LSD-69",
+	"geolocation": {
+        "type": "Point",
+        "coordinates": [41.1663061,-8.6490692]
+    }
+},
+{
+	"brand":"BMW",
+	"model":"X5",
+	"plate_number": "LS-420",
+	"geolocation": {
+        "type": "Point",
+        "coordinates": [41.1663061,-8.6490692]
+    }
 }
 
 https://medium.com/@ashishmalav/use-of-geojson-data-in-modern-applications-c979f9091133

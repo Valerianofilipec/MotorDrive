@@ -43,7 +43,9 @@ const Cars = sequelize.define('Cars',{
         references: {
             model: 'Drivers',
             key: 'id'
-        }
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
     },
     
     

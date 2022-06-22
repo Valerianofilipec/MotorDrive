@@ -10,8 +10,12 @@ module.exports = {
                 name,
                 email,
                 password,
-                home_location
+                home_location,
             });
+            /*
+            if(carsIDs){
+                await Cars.update({driverId: driver.id}, {where: {id: carsIDs}});
+            }*/
             return res.status(201).json(driver);
         } catch (error) {
             return res.status(500).json({error: 'Error creating driver'});

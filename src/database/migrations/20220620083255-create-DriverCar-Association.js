@@ -11,8 +11,8 @@ module.exports = {
         key: 'id',
         as: 'driverId',
       },
-      onDelete: 'SET NULL',
       onUpdate: 'CASCADE',
+      onDelete: 'SET NULL',
     }, {
       after: 'available',
     });

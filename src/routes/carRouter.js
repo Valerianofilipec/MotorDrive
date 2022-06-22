@@ -1,11 +1,9 @@
 const carRouter = require('express').Router();
 const CarsController = require('../controllers/CarsController.js');
 
-//test
-carRouter.get('/', (req, res) => {
-    res.send({message:'carRouter'});
-}
-);
+
+// get all cars
+carRouter.get('/', CarsController.showAllCars);
 
 //create car (by driver & car IDs)
 carRouter.post('/', CarsController.createCar);
@@ -24,5 +22,6 @@ carRouter.get('/brand/:brand', CarsController.showCarsByBrand);
 
 //get cars by proximity(longitude, latitude, radius_km)
 carRouter.get('/proximity?', CarsController.showCarsByProximity);
+
 
 module.exports = carRouter;

@@ -27,19 +27,21 @@ app.listen(port,async()=>{
     console.log(Drivers === sequelize.models.Drivers);//Apagar
     console.log(Managers === sequelize.models.Managers);//Apagar
     */
-    /*
-   const newCar = await Cars.create({
-
-        brand: "X5",
-        model: "X5",
-        plate_number: "X5-1234",
-        geolocation: {
-            type: "Point",
-            coordinates: [-46.7, -23.5]
-        },
-    });*/
-
-
+   
+   //await newDriver.addCar(car);
+   const car = await Cars.findByPk(1);
+   console.log(car);   
+   const newDriver = await Drivers.create({
+        name: "X5",
+        email: "X5",
+        home_location: "X5-1234",
+        password: "X5-1234",
+        cars : [car.id]  
+    },
+    {
+        include: [Cars]
+    }
+);
 
 
 

@@ -4,6 +4,6 @@ const routes = require('express').Router();
 
 //routes.use('/login', );
 routes.use("/cars", carRouter);
-routes.use("/driver", driverRouter);
+routes.use("/drivers", driverRouter);
 
 module.exports = routes;

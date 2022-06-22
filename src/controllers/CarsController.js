@@ -4,6 +4,7 @@ const {Sequelize} = require("sequelize");
 module.exports = {
     //create a new car with(out) the driver id
     async createCar(req, res){
+        const {driverId} = req.params ? req.params : req.body;
         const {
             brand,
             model, 
@@ -12,8 +13,7 @@ module.exports = {
                 "type": "Point",
                 "coordinates": [41.1663061,-8.6490692]
             }, 
-            available, 
-            driverId
+            available
         } = req.body;
         try {
             const car = await Cars.create({
@@ -22,7 +22,7 @@ module.exports = {
                 plate_number,
                 geolocation,
                 available,
-                driverId
+                driverId 
             });
             return res.status(201).json(car);
             
@@ -127,6 +127,16 @@ module.exports = {
             return res.status(200).json(cars);
         } catch (error) {
             return res.status(500).json(error.message);
+        }
+    },
+
+    async showAllCars(req, res){
+        try {
+            const cars = await Cars.findAll();
+            console.log(cars);
+            return res.status(200).json(cars);
+        } catch (error) {
+            return res.status(500).json({error: 'Error getting cars'});
         }
     },
 }
