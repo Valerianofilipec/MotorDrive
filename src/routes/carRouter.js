@@ -9,10 +9,10 @@ carRouter.get('/', CarsController.showAllCars);
 carRouter.post('/', CarsController.createCar);
 
 //update car (by driver & car IDs)
-carRouter.put('/:id', CarsController.updateCar);
+carRouter.put('/:car_id', CarsController.updateCar);
 
 //delete car (by ID)
-carRouter.delete('/:id', CarsController.deleteCar);
+carRouter.delete('/:car_id', CarsController.deleteCar);
 
 //get all cars geolocation
 carRouter.get('/geolocation', CarsController.showCarsLocations);

@@ -35,8 +35,8 @@ Object.keys(db).forEach(modelName => {
 });
 
 //Associations
-Drivers.hasMany(Cars, { foreignKey: 'driverId' });
-Cars.belongsTo(Drivers, { foreignKey: 'driverId' });
+//Drivers.hasMany(Cars);
+//Cars.belongsTo(Drivers);
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

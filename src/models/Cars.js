@@ -1,59 +1,57 @@
-/*
-const db = require('./index.js')
-const sequelize = db.sequelize;
-const Sequelize = db.Sequelize;
-const Model = Sequelize.Model;
-*/
-
-
 const {Sequelize} = require("sequelize");
-const  sequelize = require("../database/connection.js");
 
-const Cars = sequelize.define('Cars',{
-    brand: {
-        type: Sequelize.STRING,
-        notEmpty: true,
-        allowNull: false
-    },
-    model: {
-        type: Sequelize.STRING,
-        notEmpty: true,
-        allowNull: false
-    },
-    plate_number: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        notEmpty: true,
-        unique: true
-    },
-    geolocation: {
-        type: Sequelize.GEOMETRY('POINT'),
-        allowNull: false,
-        notEmpty: true,
-        //defaultValue: sequelize.literal(`ST_GeomFromText('POINT(0 0)')`) //coordanates of the company
-    },
-    available: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false,
-        defaultValue: true, //it must be associated to a driver, when created!
-    },
-    driverId: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-        references: {
-            model: 'Drivers',
-            key: 'id'
+module.exports = (sequelize, DataTypes) =>{
+    const Cars = sequelize.define('Cars',{
+        brand: {
+            type: DataTypes.STRING,
+            notEmpty: true,
+            allowNull: false
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL'
-    },
+        model: {
+            type: DataTypes.STRING,
+            notEmpty: true,
+            allowNull: false
+        },
+        plate_number: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            notEmpty: true,
+            unique: true
+        },
+        geolocation: {
+            type: DataTypes.GEOMETRY('POINT'),
+            allowNull: false,
+            notEmpty: true,
+            //defaultValue: sequelize.literal(`ST_GeomFromText('POINT(0 0)')`) //coordanates of the company
+        },
+        available: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: true, //it must be associated to a driver, when created!
+        },
+        driverId: {
+            type: DataTypes.INTEGER,
+            foreignKey: true,
+            allowNull: true,
+            references: {
+                model: 'Drivers',
+                key: 'id'
+            },
+            onUpdate: 'CASCADE',
+            onDelete: 'SET NULL'
+        },
+        
+        
+    }, {
+        // Other model options go here
+        timestamps: true,
+    }
     
+    );
     
-}, {
-    // Other model options go here
-    timestamps: true,
+    Cars.associate = (models) => {
+        Cars.belongsTo(models.Drivers);
+    }
+    
+    return Cars;
 }
-
-);
-
-module.exports = Cars;

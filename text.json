@@ -24,7 +24,46 @@
         "type": "Point",
         "coordinates": [41.1663061,-8.6490692]
     }
+},
+{
+	"brand":"Toyota",
+	"model":"Yaris",
+	"plate_number": "LSD-420",
+	"geolocation": {
+    "type": "Point",
+    "coordinates": [6,9]
 }
+}
+
+//Drivers w/ cars
+{
+	"name": "X59",
+	"email": "X59@emaisl.com",
+	"home_location": "Rua 5X",
+	"password": "X9-050s7",
+	"cars":[
+		{
+		"brand":"BMW",
+		"model":"X5",
+		"plate_number": "Test",
+		"geolocation": {
+					"type": "Point",
+					"coordinates": [41.1663061,-8.6490692]
+    }
+},
+		{
+		"brand":"BMW",
+		"model":"X5",
+		"plate_number": "Test2",
+		"geolocation": {
+					"type": "Point",
+					"coordinates": [41.1663061,-8.6490692]
+    }
+}
+	]
+}
+
+
 
 https://medium.com/@ashishmalav/use-of-geojson-data-in-modern-applications-c979f9091133
 

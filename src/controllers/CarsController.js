@@ -1,10 +1,10 @@
-const Cars = require('../models/Cars');
+const {Cars} = require('../models');
 const {Sequelize} = require("sequelize");
 
 module.exports = {
-    //create a new car with(out) the driver id
+    //create a new car with(out) the driverId
     async createCar(req, res){
-        const {driverId} = req.params ? req.params : req.body;
+        const {driver_id: driverId} = req.params;
         const {
             brand,
             model, 
@@ -29,17 +29,20 @@ module.exports = {
         } catch (error) {
             return res.status(500).json(error.message);
         }
-
     },
 
     async updateCar(req, res){
-        const {id} = req.params;
-        const car = await Cars.findByPk(id);
+        const {driver_id, car_id} = req.params;
+        const car = await Cars.findByPk(car_id);
 
         if(!car){
             return res.status(404).json({error: 'Car not found'});
         }
-
+        if(driver_id){//if the driver_id is passed, check if it's the same driver
+            if(car.driverId != driver_id){
+                return res.status(400).json({error: 'Driver not authorized'});
+            }
+        }
         const carUpdated =  Object.assign(car, req.body);
         try {
             await carUpdated.save();
@@ -51,11 +54,16 @@ module.exports = {
     },
 
     async deleteCar(req, res){
-        const {id} = req.params;
-        const car = await Cars.findByPk(id);
+        const {driver_id,car_id} = req.params;
+        const car = await Cars.findByPk(car_id);
 
         if(!car){
             return res.status(404).json({error: 'Car not found'});
+        }
+        if(driver_id){//if the driver_id is passed, check if it's the same driver
+            if(car.driverId != driver_id){
+                return res.status(400).json({error: 'Driver not authorized'});
+            }
         }
         try {
             await car.destroy();
@@ -131,9 +139,20 @@ module.exports = {
     },
 
     async showAllCars(req, res){
+        const {driver_id} = req.params;
         try {
-            const cars = await Cars.findAll();
-            console.log(cars);
+            let cars;
+            if(driver_id){
+                cars = await Cars.findAll({
+                    where: {
+                        driverId: driver_id
+                    }
+                });
+            } else {
+                cars = await Cars.findAll();
+            }
+
+            console.log(cars[0])
             return res.status(200).json(cars);
         } catch (error) {
             return res.status(500).json({error: 'Error getting cars'});
