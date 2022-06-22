@@ -28,15 +28,16 @@ fs
     db[model.name] =  model;
   });
 
+//Associations
+Drivers.hasMany(Cars);
+Cars.belongsTo(Drivers);
+
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }
 });
 
-//Associations
-//Drivers.hasMany(Cars);
-//Cars.belongsTo(Drivers);
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

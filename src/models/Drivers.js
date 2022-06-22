@@ -1,38 +1,40 @@
 const {Sequelize} = require("sequelize");
+const sequelize = require('../database/connection.js');
 
-module.exports = (sequelize, DataTypes)=>{
-  const Drivers = sequelize.define('Drivers',{
-    name: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
-      },
-      password: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      home_location:{
-        type: DataTypes.STRING,
-        allowNull: false,
-        notEmppty: true,
-      },/*
-      cars: {
-        type: DataTypes.ARRAY(DataTypes.INTEGER),
-        allowNull: false,
-        notEmpty: true,
-      },*/
+
+const Drivers = sequelize.define('Drivers',{
+  name: {
+      type: Sequelize.STRING,
+      allowNull: true,
+    },
+    email: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      unique: true
+    },
+    password: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    home_location:{
+      type: Sequelize.STRING,
+      allowNull: false,
+      notEmppty: true,
+    },/*
+    cars: {
+      type: Sequelize.ARRAY(Sequelize.INTEGER),
+      allowNull: false,
+      notEmpty: true,
+    },*/
 }, {
-    // Other model options go here
-    timestamps: true,
+  // Other model options go here
+  timestamps: true,
 });
-
+/*
 Drivers.associate = (models) => {
-  Drivers.hasMany(models.Cars);
+Drivers.hasMany(models.Cars);
 }
+*/
 
-return Drivers;
-}
+
+module.exports = Drivers;

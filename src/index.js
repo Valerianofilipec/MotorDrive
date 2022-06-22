@@ -2,17 +2,16 @@
 require ("dotenv/config"); 
 const express = require("express");
 const routes = require("./routes/index.js");
-const Drivers = require("./models/Drivers.js"); 
 const Cars = require("./models/Cars.js");
+const Drivers = require("./models/Drivers.js");
 const Managers = require("./models/Managers.js");
-
 
 const app = express();
 
 // environment variables
 const port = process.env.APP_PORT;
 
-//app.use(cors());
+
 app.use(express.json());
 app.use(routes);
 

@@ -1,4 +1,4 @@
-const {Cars} = require('../models');
+const Cars = require('../models/Cars.js');
 const {Sequelize} = require("sequelize");
 
 module.exports = {
