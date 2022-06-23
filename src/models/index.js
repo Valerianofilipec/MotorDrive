@@ -24,13 +24,11 @@ fs
     return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
   })
   .forEach(file => {
+
     const model =  require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
     db[model.name] =  model;
+    console.log(` Models: ${model.name}`);
   });
-
-//Associations
-Drivers.hasMany(Cars);
-Cars.belongsTo(Drivers);
 
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {

@@ -1,5 +1,5 @@
-const Cars = require('../models/Cars.js');
-const {Sequelize} = require("sequelize");
+const {Cars} = require('../models');
+//const {Sequelize} = require("sequelize");
 
 module.exports = {
     //create a new car with(out) the driverId

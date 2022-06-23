@@ -2,10 +2,12 @@
 require ("dotenv/config"); 
 const express = require("express");
 const routes = require("./routes/index.js");
+const models = require("./models/index.js");
+/*
 const Cars = require("./models/Cars.js");
 const Drivers = require("./models/Drivers.js");
 const Managers = require("./models/Managers.js");
-
+*/
 const app = express();
 
 // environment variables

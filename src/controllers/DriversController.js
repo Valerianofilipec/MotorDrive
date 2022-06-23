@@ -1,6 +1,4 @@
-const Drivers = require('../models/Drivers');
-const Cars = require('../models/Cars.js');
-
+const {Cars, Drivers} = require("../models");
 
 module.exports = {
 
@@ -8,10 +6,6 @@ module.exports = {
        const {name, email, home_location, password, cars} = req.body;
        const carsArray = [];
        try {
-        //Associations
-        Drivers.hasMany(Cars);
-        Cars.belongsTo(Drivers);
-        
         if(typeof cars[0] == 'number'){
             cars.forEach(async car => {
                 const carObj = await Cars.findByPk(car);
@@ -23,7 +17,6 @@ module.exports = {
                 carsArray.push(carObj);
             });
         }
-        
 
         const newDriver = await Drivers.create({
             name,
@@ -31,7 +24,7 @@ module.exports = {
             home_location,
             password,
         }); 
-        await newDriver.addCars(carsToAssociate);
+        await newDriver.addCars(carsArray);
 
         return res.status(201).json(newDriver);
        } catch (error) {
@@ -47,9 +40,6 @@ module.exports = {
         if(!driver){
             return res.status(404).json({error: 'Driver not found'});
         }
-        //Associations
-        Drivers.hasMany(Cars);
-        Cars.belongsTo(Drivers);
 
         const driverUpdated =  Object.assign(driver, req.body);
         try {
@@ -69,9 +59,6 @@ module.exports = {
             return res.status(404).json({error: 'Driver not found'});
         }
 
-        //Associations
-        Drivers.hasMany(Cars);
-        Cars.belongsTo(Drivers);
         try {
             await driver.destroy();
             return res.status(200).json({message: 'Driver deleted'});

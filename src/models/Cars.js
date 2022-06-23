@@ -1,37 +1,34 @@
-const {Sequelize} = require("sequelize");
-const sequelize = require("../database/connection.js");
-
-
+module.exports = (sequelize, DataTypes) => {
 const Cars = sequelize.define('Cars',{
     brand: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         notEmpty: true,
         allowNull: false
     },
     model: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         notEmpty: true,
         allowNull: false
     },
     plate_number: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
         notEmpty: true,
         unique: true
     },
     geolocation: {
-        type: Sequelize.GEOMETRY('POINT'),
+        type: DataTypes.GEOMETRY('POINT'),
         allowNull: false,
         notEmpty: true,
         //defaultValue: sequelize.literal(`ST_GeomFromText('POINT(0 0)')`) //coordanates of the company
     },
     available: {
-        type: Sequelize.BOOLEAN,
+        type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: true, //it must be associated to a driver, when created!
     },
     driverId: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         foreignKey: true,
         allowNull: true,
         references: {
@@ -49,11 +46,12 @@ const Cars = sequelize.define('Cars',{
 }
 
 );
-/*    
-Cars.associate = (models) => {
+   
+Cars.associate = models => {
     Cars.belongsTo(models.Drivers);
 }
-*/
 
+return Cars;
+}
 
-module.exports = Cars;
+//module.exports = Cars;
