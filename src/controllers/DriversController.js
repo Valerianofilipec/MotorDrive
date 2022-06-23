@@ -1,9 +1,11 @@
+const {hash} = require("bcrypt");
 const {Cars, Drivers} = require("../models");
 
 module.exports = {
 
     async createDriver(req, res){
        const {name, email, home_location, password, cars} = req.body;
+       const passwordHash = await hash(password, 7);
        const carsArray = [];
        try {
         if(typeof cars[0] == 'number'){
@@ -22,14 +24,13 @@ module.exports = {
             name,
             email,
             home_location,
-            password,
+            password: passwordHash,
         }); 
         await newDriver.addCars(carsArray);
 
         return res.status(201).json(newDriver);
        } catch (error) {
-        console.log(error);
-        return res.status(500).json(error);
+        return res.status(500).json(error.message);
        }
     },
     //update driver (except cars associations) 
@@ -40,8 +41,14 @@ module.exports = {
         if(!driver){
             return res.status(404).json({error: 'Driver not found'});
         }
-
-        const driverUpdated =  Object.assign(driver, req.body);
+        const {password,...tail} = req.body;
+        let driverUpdated;
+        if(password){
+            const passwordHash = await hash(password,7);
+            driverUpdated = Object.assign(driver, {...tail, password:passwordHash})
+        }else{
+            driverUpdated =  Object.assign(driver, req.body);
+        }
         try {
             await driverUpdated.save();
         } catch (error) {

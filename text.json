@@ -63,13 +63,10 @@
 	]
 }
 
-
+//Find features within given coordinates and distance using MySQL
+https://www.movable-type.co.uk/scripts/latlong-db.html
 
 https://medium.com/@ashishmalav/use-of-geojson-data-in-modern-applications-c979f9091133
 
-https://stackoverflow.com/questions/53145535/using-sequelize-how-can-i-get-the-closest-n-elements-to-a-lat-and-long-that-lies
-
-https://stackoverflow.com/questions/44012932/sequelize-geospatial-query-find-n-closest-points-to-a-location
-
-https://levelup.gitconnected.com/creating-sequelize-associations-with-the-sequelize-cli-tool-d83caa902233
-
+//About associations
+https://medium.com/@codingnotes/how-to-create-instances-with-associations-in-sequelize-6664cb9fb984

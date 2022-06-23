@@ -1,4 +1,4 @@
-const {Cars} = require('../models');
+const {Cars,Sequelize, sequelize} = require('../models');
 //const {Sequelize} = require("sequelize");
 
 module.exports = {
@@ -103,15 +103,14 @@ module.exports = {
     //get all cars by proximity (latitude, longitude, radius)
     async showCarsByProximity(req, res){
         const {longitude,latitude, radius} = req.query;
-        console.log(longitude, latitude, radius);
+
         try {
-            /*
-            var cars = await Cars.findAll({
+            const cars = await Cars.findAll({
                 where: {
                     geolocation: {
                         $near: {
                             $maxDistance: radius,
-                            $geolocation: {
+                            $geometry: {
                                 type: "Point",
                                 coordinates: [longitude, latitude]
                             }
@@ -119,7 +118,8 @@ module.exports = {
                     }
                 },
                 attributes: ['model', 'plate_number', 'available']
-            });*/
+            });
+            /*
             const cars = await Cars.findAll({
                 where: Sequelize.where(
                     Sequelize.fn('ST_DWithin',
@@ -130,10 +130,29 @@ module.exports = {
                             +radius*0.016), 
                         true
                 )
-            })
-            console.log(cars);
+            })*/
+            /*
+            const cars = await sequelize.query(`
+                SELECT
+                    id, (
+                    3959 * acos (
+                    cos ( radians(78.3232) )
+                    * cos( radians( ${latitude} ) )
+                    * cos( radians( ${longitude} ) - radians(65.3234) )
+                    + sin ( radians(78.3232) )
+                    * sin( radians( ${latitude} ) )
+                    )
+                ) AS distance
+                FROM Cars
+                HAVING distance < ${radius}
+                ORDER BY distance
+                LIMIT 0 , 20;
+            `);
+            */
+
             return res.status(200).json(cars);
         } catch (error) {
+            console.log(error)
             return res.status(500).json(error.message);
         }
     },

@@ -1,25 +1,20 @@
 Arguments: 
-  /usr/local/Cellar/node/17.2.0/bin/node /usr/local/Cellar/yarn/1.22.17/libexec/bin/yarn.js sequelize-cli db:migrate
+  /usr/local/bin/node /opt/yarn-v1.22.19/bin/yarn.js add bcrypt
 
 PATH: 
-  /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Apple/usr/bin
+  /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 Yarn version: 
-  1.22.17
+  1.22.19
 
 Node version: 
-  17.2.0
+  18.4.0
 
 Platform: 
-  darwin x64
+  linux x64
 
 Trace: 
-  SyntaxError: /Users/valerianofilipec/Desktop/Github_P/Ludus/MotorDrive/package.json: Unexpected token / in JSON at position 92
-      at JSON.parse (<anonymous>)
-      at /usr/local/Cellar/yarn/1.22.17/libexec/lib/cli.js:1625:59
-      at Generator.next (<anonymous>)
-      at step (/usr/local/Cellar/yarn/1.22.17/libexec/lib/cli.js:310:30)
-      at /usr/local/Cellar/yarn/1.22.17/libexec/lib/cli.js:321:13
+  Error: ENOTEMPTY: directory not empty, rmdir '/usr/app/node_modules/.bin'
 
 npm manifest: 
   {
@@ -27,7 +22,6 @@ npm manifest:
     "version": "1.0.0",
     "main": "index.js",
     "license": "MIT",
-    /*"type": "module",*/
     "scripts": {
       "dev": "nodemon -L src/index.js"
     },
