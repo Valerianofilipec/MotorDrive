@@ -63,13 +63,22 @@
 	]
 }
 
+SET @user_location = ST_GeomFromText( 'POINT(0 0)' );
+SELECT 
+    *,
+    ST_AsText(`position`) AS `pos_wkt`,
+    ST_Distance(`position`, @user_location) AS `distance`
+FROM
+    `locations_flat`
+WHERE ST_Distance(`position`, @user_location) <= 100;
 
+//Or
 
-https://medium.com/@ashishmalav/use-of-geojson-data-in-modern-applications-c979f9091133
-
-https://stackoverflow.com/questions/53145535/using-sequelize-how-can-i-get-the-closest-n-elements-to-a-lat-and-long-that-lies
-
-https://stackoverflow.com/questions/44012932/sequelize-geospatial-query-find-n-closest-points-to-a-location
-
-https://levelup.gitconnected.com/creating-sequelize-associations-with-the-sequelize-cli-tool-d83caa902233
-
+SET @user_location = ST_GeomFromText( 'POINT(30 50)', 4326 );
+SELECT 
+    *,
+    ST_AsText(`position`) AS `pos_wkt`,
+    ST_Distance_Sphere(`position`, @user_location) AS `distance`
+FROM
+    `locations_earth`
+WHERE ST_Distance_Sphere(`position`, @user_location) <= (1000*1000);

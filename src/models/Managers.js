@@ -1,23 +1,21 @@
-const {Sequelize} = require("sequelize");
-const sequelize = require("../database/connection.js");
-
-const Managers = sequelize.define('Managers',{
-  name: {
-      type: Sequelize.STRING,
-      allowNull: true,
-    },
-    email: {
-      type: Sequelize.STRING,
-      allowNull: false,
-      unique: true
-    },
-    password: {
-      type: Sequelize.STRING,
-      allowNull: false,
-    },
-}, {
-  // Other model options go here
-  timestamps: true,
-});
-
-module.exports = Managers;
+module.exports = (sequelize, DataTypes) => {
+  const Managers = sequelize.define('Managers',{
+    name: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+  }, {
+    // Other model options go here
+    timestamps: true,
+  });
+  return Managers;
+}

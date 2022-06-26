@@ -1,6 +1,6 @@
-const Drivers = require('../models/Drivers');
-const Cars = require('../models/Cars.js');
-
+const {Cars, Drivers} = require('../models');
+const {hash}= require("bcrypt");
+require('dotenv').config();
 
 module.exports = {
 
@@ -8,10 +8,6 @@ module.exports = {
        const {name, email, home_location, password, cars} = req.body;
        const carsArray = [];
        try {
-        //Associations
-        Drivers.hasMany(Cars);
-        Cars.belongsTo(Drivers);
-        
         if(typeof cars[0] == 'number'){
             cars.forEach(async car => {
                 const carObj = await Cars.findByPk(car);
@@ -23,15 +19,14 @@ module.exports = {
                 carsArray.push(carObj);
             });
         }
-        
-
+        const passwordHash = await hash(password,process.env.BCRYPT_SALT);
         const newDriver = await Drivers.create({
             name,
             email,
             home_location,
-            password,
+            password: passwordHash,
         }); 
-        await newDriver.addCars(carsToAssociate);
+        await newDriver.addCars(carsArray);
 
         return res.status(201).json(newDriver);
        } catch (error) {
@@ -42,16 +37,18 @@ module.exports = {
     //update driver (except cars associations) 
     async updateDriver(req, res){
         const {driver_id} = req.params;
+        const {password, ...others} = req.body;
         const driver = await Drivers.findByPk(driver_id);
-
+        let driverUpdated;
         if(!driver){
             return res.status(404).json({error: 'Driver not found'});
         }
-        //Associations
-        Drivers.hasMany(Cars);
-        Cars.belongsTo(Drivers);
-
-        const driverUpdated =  Object.assign(driver, req.body);
+        if(password){
+            const passwordHash = await hash(password,process.env.BCRYPT_SALT);
+            driverUpdated =  Object.assign(driver, {password: passwordHash, ...others});
+        }else{
+            driverUpdated = Object.assign(driver, {...others});
+        }
         try {
             await driverUpdated.save();
         } catch (error) {
@@ -69,9 +66,6 @@ module.exports = {
             return res.status(404).json({error: 'Driver not found'});
         }
 
-        //Associations
-        Drivers.hasMany(Cars);
-        Cars.belongsTo(Drivers);
         try {
             await driver.destroy();
             return res.status(200).json({message: 'Driver deleted'});

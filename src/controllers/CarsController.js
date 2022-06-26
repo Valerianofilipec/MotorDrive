@@ -1,10 +1,10 @@
-const Cars = require('../models/Cars.js');
-const {Sequelize} = require("sequelize");
+const {Cars} = require('../models');
 
 module.exports = {
     //create a new car with(out) the driverId
     async createCar(req, res){
-        const {driver_id: driverId} = req.params;
+        const {driver_id :driverId} = req.params;
+
         const {
             brand,
             model, 
@@ -38,11 +38,7 @@ module.exports = {
         if(!car){
             return res.status(404).json({error: 'Car not found'});
         }
-        if(driver_id){//if the driver_id is passed, check if it's the same driver
-            if(car.driverId != driver_id){
-                return res.status(400).json({error: 'Driver not authorized'});
-            }
-        }
+       
         const carUpdated =  Object.assign(car, req.body);
         try {
             await carUpdated.save();
@@ -105,32 +101,25 @@ module.exports = {
         const {longitude,latitude, radius} = req.query;
         console.log(longitude, latitude, radius);
         try {
-            /*
-            var cars = await Cars.findAll({
+            // find all cars with geolocation within the radius
+            const cars = await Cars.findAll({
                 where: {
                     geolocation: {
-                        $near: {
-                            $maxDistance: radius,
-                            $geolocation: {
-                                type: "Point",
-                                coordinates: [longitude, latitude]
-                            }
+                        $within: {
+                            $centerSphere: [
+                                [longitude, latitude], radius
+                            ]
                         }
                     }
                 },
-                attributes: ['model', 'plate_number', 'available']
-            });*/
-            const cars = await Cars.findAll({
-                where: Sequelize.where(
-                    Sequelize.fn('ST_DWithin',
-                        Sequelize.col('geolocation'),
-                        Sequelize.fn('ST_SetSRID',
-                            Sequelize.fn('ST_MakePoint',
-                                longitude, latitude))
-                            +radius*0.016), 
-                        true
-                )
-            })
+                attributes: ['model', 'plate_number', 'geolocation'],
+                include: [{
+                    model: Drivers,
+                    attributes: ['name'],
+                    as: 'driver'
+                }]
+            });
+
             console.log(cars);
             return res.status(200).json(cars);
         } catch (error) {
