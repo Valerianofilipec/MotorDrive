@@ -8,8 +8,8 @@ module.exports = {
     async login(req, res){
         const {email, password} = req.body;
 
-        //check if user with email exists (! refatorar esta palhaçada, pois está fazendo duas buscas)
-        let user = await Managers.findOne({where: {email}});
+        //check if user with email exists (! refatorar esta palhaçada, pois está fazendo duas buscas em tabelas diferentes)
+        let user = await Managers.findOne({where: {email}});//? como eu sei que o user é um manager ou driver?
         if(!user){
             user = await Drivers.findOne({where: {email}});
             if(!user){
@@ -18,19 +18,27 @@ module.exports = {
         }
 
         // check if password is correct
+        console.log(user.password);//
         const passwordMatch = await compare(password, user.password);
+        console.log(passwordMatch);//
+        console.log(user.id);//
         if(!passwordMatch){
-            return {error: 'Email or Password incorrect'};
+            return  res.status(400).json({error: 'Email or Password incorrect'});
         }
 
         // genarate token
         try{
-            const token = sign({}, process.env.JWT_SECRET, {
-                subject: user.id,
-                expiresIn: '1d'
+            const token = sign({user:{
+                id: user.id,
+                email: user.email,
+            }},"4602bcc8edfaf52d4bf84330f90e6e1d", {
+                expiresIn: '1d',
             });     
-            console.log({user, token});
-            return {user, token};
+            
+            return res.status(200).json({user:{
+                id: user.id,
+                email: user.email,
+            },token});
         } catch (error) {
             return {error: 'Error comparing password'};
         }

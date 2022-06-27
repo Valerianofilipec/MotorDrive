@@ -72,6 +72,8 @@ https://medium.com/@ashishmalav/use-of-geojson-data-in-modern-applications-c979f
 https://medium.com/@codingnotes/how-to-create-instances-with-associations-in-sequelize-6664cb9fb984
 
 https://medium.com/swlh/basic-login-system-with-node-js-99acf02275b9
+
+
 SET @user_location = ST_GeomFromText( 'POINT(0 0)' );
 SELECT 
     *,

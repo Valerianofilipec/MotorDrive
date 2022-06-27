@@ -2,12 +2,13 @@ const {hash} = require("bcrypt");
 const {Cars, Drivers} = require("../models");
 require("dotenv").config();
 
+
 module.exports = {
 
     async createDriver(req, res){
        const {name, email, home_location, password, cars} = req.body;
-       const passwordHash = await hash(password, 7);
        const carsArray = [];
+       // set the type of list cars to array
        try {
         if(typeof cars[0] == 'number'){
             cars.forEach(async car => {
@@ -20,7 +21,7 @@ module.exports = {
                 carsArray.push(carObj);
             });
         }
-        const passwordHash = await hash(password,process.env.BCRYPT_SALT);
+        const passwordHash = await  hash(password, 7);
         const newDriver = await Drivers.create({
             name,
             email,
@@ -44,7 +45,7 @@ module.exports = {
             return res.status(404).json({error: 'Driver not found'});
         }
         if(password){
-            const passwordHash = await hash(password,process.env.BCRYPT_SALT);
+            const passwordHash = await hash(password,7);
             driverUpdated =  Object.assign(driver, {password: passwordHash, ...others});
         }else{
             driverUpdated = Object.assign(driver, {...others});
