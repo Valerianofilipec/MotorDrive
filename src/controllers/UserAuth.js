@@ -1,7 +1,8 @@
+const dotenv = require("dotenv");
+dotenv.config();
 const {compare} = require('bcrypt');
 const {sign} = require('jsonwebtoken');
 const {Drivers, Managers} = require('../models');
-require('dotenv').config();
 
 
 module.exports = {
@@ -31,7 +32,7 @@ module.exports = {
             const token = sign({user:{
                 id: user.id,
                 email: user.email,
-            }},"4602bcc8edfaf52d4bf84330f90e6e1d", {
+            }},processs.env.JWT_SECRET, {
                 expiresIn: '1d',
             });     
             
@@ -40,7 +41,7 @@ module.exports = {
                 email: user.email,
             },token});
         } catch (error) {
-            return {error: 'Error comparing password'};
+            return res.status(500).json({error: 'Error comparing password'});
         }
     }
     

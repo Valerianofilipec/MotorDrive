@@ -1,7 +1,8 @@
+require ("dotenv/config"); 
 const {hash} = require("bcrypt");
 const {Cars, Drivers} = require("../models");
-require("dotenv").config();
 
+const saltRounds = process.env.BCRYPT_SALT;
 
 module.exports = {
 
@@ -21,7 +22,7 @@ module.exports = {
                 carsArray.push(carObj);
             });
         }
-        const passwordHash = await  hash(password, 7);
+        const passwordHash = hash(password, 10);
         const newDriver = await Drivers.create({
             name,
             email,
@@ -45,7 +46,9 @@ module.exports = {
             return res.status(404).json({error: 'Driver not found'});
         }
         if(password){
-            const passwordHash = await hash(password,7);
+            console.log(`\nbcryptSalt: ${saltRounds}\n`)//
+            const passwordHash = await hash(password, 10);
+            console.log(`passwordHash: ${passwordHash}`)//
             driverUpdated =  Object.assign(driver, {password: passwordHash, ...others});
         }else{
             driverUpdated = Object.assign(driver, {...others});
