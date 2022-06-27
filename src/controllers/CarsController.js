@@ -1,10 +1,11 @@
-const {Cars,Sequelize, sequelize} = require('../models');
+const {Cars} = require('../models');
 //const {Sequelize} = require("sequelize");
 
 module.exports = {
     //create a new car with(out) the driverId
     async createCar(req, res){
-        const {driver_id: driverId} = req.params;
+        const {driver_id :driverId} = req.params;
+
         const {
             brand,
             model, 
@@ -38,11 +39,7 @@ module.exports = {
         if(!car){
             return res.status(404).json({error: 'Car not found'});
         }
-        if(driver_id){//if the driver_id is passed, check if it's the same driver
-            if(car.driverId != driver_id){
-                return res.status(400).json({error: 'Driver not authorized'});
-            }
-        }
+       
         const carUpdated =  Object.assign(car, req.body);
         try {
             await carUpdated.save();
@@ -105,51 +102,26 @@ module.exports = {
         const {longitude,latitude, radius} = req.query;
 
         try {
+            // find all cars with geolocation within the radius
             const cars = await Cars.findAll({
                 where: {
                     geolocation: {
-                        $near: {
-                            $maxDistance: radius,
-                            $geometry: {
-                                type: "Point",
-                                coordinates: [longitude, latitude]
-                            }
+                        $within: {
+                            $centerSphere: [
+                                [longitude, latitude], radius
+                            ]
                         }
                     }
                 },
-                attributes: ['model', 'plate_number', 'available']
+                attributes: ['model', 'plate_number', 'geolocation'],
+                include: [{
+                    model: Drivers,
+                    attributes: ['name'],
+                    as: 'driver'
+                }]
             });
-            /*
-            const cars = await Cars.findAll({
-                where: Sequelize.where(
-                    Sequelize.fn('ST_DWithin',
-                        Sequelize.col('geolocation'),
-                        Sequelize.fn('ST_SetSRID',
-                            Sequelize.fn('ST_MakePoint',
-                                longitude, latitude))
-                            +radius*0.016), 
-                        true
-                )
-            })*/
-            /*
-            const cars = await sequelize.query(`
-                SELECT
-                    id, (
-                    3959 * acos (
-                    cos ( radians(78.3232) )
-                    * cos( radians( ${latitude} ) )
-                    * cos( radians( ${longitude} ) - radians(65.3234) )
-                    + sin ( radians(78.3232) )
-                    * sin( radians( ${latitude} ) )
-                    )
-                ) AS distance
-                FROM Cars
-                HAVING distance < ${radius}
-                ORDER BY distance
-                LIMIT 0 , 20;
-            `);
-            */
 
+            console.log(cars);
             return res.status(200).json(cars);
         } catch (error) {
             console.log(error)

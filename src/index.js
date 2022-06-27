@@ -1,7 +1,8 @@
 //import cors from "cors";
 require ("dotenv/config"); 
 const express = require("express");
-const routes = require("./routes/index.js");
+const routes = require("./routes");
+
 
 const app = express();
 
@@ -12,5 +13,5 @@ app.use(express.json());
 app.use(routes);
 
 app.listen(port,async()=>{
-    console.log(`MotorDrive's Server running! on port: ${port}` );
+    console.log(`MotorDrive's Server running!  ${port}` );
 });

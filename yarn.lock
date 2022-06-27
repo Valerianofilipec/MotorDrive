@@ -416,7 +416,11 @@ debug@2.6.9:
 
 debug@4, debug@^4.3.3:
   version "4.3.4"
+<<<<<<< HEAD
   resolved "https://registry.npmjs.org/debug/-/debug-4.3.4.tgz"
+=======
+  resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.4.tgz#1319f6579357f2338d3337d2cdd4914bb5dcc865"
+>>>>>>> 6f2366b3ea0a84fed5b8c779a56fbad48a4983df
   integrity sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==
   dependencies:
     ms "2.1.2"
