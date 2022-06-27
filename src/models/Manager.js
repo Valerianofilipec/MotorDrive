@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-const Managers = sequelize.define('Managers',{
+const Manager = sequelize.define('User',{
   name: {
       type: DataTypes.STRING,
       allowNull: true,
@@ -9,16 +9,17 @@ const Managers = sequelize.define('Managers',{
       allowNull: false,
       unique: true
     },
+    userType:{
+      type: Sequelize.ENUM("driver", "manager"),
+      defaultValue: "manager",
+    },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
     },
 }, {
-  // Other model options go here
   timestamps: true,
 });
 
-return Managers;
-
+return Manager;
 }
-//module.exports = Managers;

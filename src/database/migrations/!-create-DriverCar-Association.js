@@ -13,8 +13,6 @@ module.exports = {
       },
       onUpdate: 'CASCADE',
       onDelete: 'SET NULL',
-    }, {
-      after: 'available',
     });
 /*
     await queryInterface.addColumn('Drivers', 'cars', {

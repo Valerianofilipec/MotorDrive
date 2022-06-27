@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const Cars = sequelize.define('Cars',{
+    const Car = sequelize.define('Car',{
         brand: {
             type: DataTypes.STRING,
             notEmpty: true,
@@ -20,7 +20,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.GEOMETRY('POINT'),
             allowNull: false,
             notEmpty: true,
-            //defaultValue: sequelize.literal(`ST_GeomFromText('POINT(0 0)')`) //coordanates of the company
         },
         available: {
             type: DataTypes.BOOLEAN,
@@ -32,19 +31,19 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: true,
             allowNull: true,
             references: {
-                model: 'Drivers',
-                key: 'id'
-            }
+                model: 'DriverInfo',
+                key: 'userId',
+                as: 'driverId'
+            },
+            onDelete: 'CASCADE'
         }      
-        }, 
-        {
-            // Other model options go here
-            timestamps: true,
+    },{
+        timestamps: true,
     });
         
-    Cars.associate = models => {
-        Cars.belongsTo(models.Drivers);
+    Car.associate = models => {
+        Car.belongsTo(models.User);
     }
 
-    return Cars;
+    return Car;
 }
