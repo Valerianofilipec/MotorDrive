@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     );
 
     User.associate = (models) => {
-        User.hasOne(models.DriverInfo);
+        User.hasOne(models.DriverInfo,{foreingKey:'id'});
       }
 
     return User;

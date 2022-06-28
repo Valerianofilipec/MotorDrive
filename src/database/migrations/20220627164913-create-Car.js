@@ -38,10 +38,9 @@ module.exports = {
         references: {
           model: 'DriverInfo',
           key: 'id',
-          as:'DriverInfoId'
         },
-        onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
       },
       createdAt:{
           type: Sequelize.DATE,

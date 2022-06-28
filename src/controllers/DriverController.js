@@ -1,6 +1,6 @@
 require ("dotenv/config"); 
 const {hash} = require("bcrypt");
-const {Car, DriverInfo, User} = require("../models");
+const {Car, User, DriverInfo} = require("../models");
 
 const saltRounds = process.env.BCRYPT_SALT;
 
@@ -22,23 +22,18 @@ module.exports = {
             });
         }
         const passwordHash = await hash(password, 10);
-
-        //create the driverInfo first
-        const driver = await DriverInfo.create({
-            home_location,
-        });
-        await driver.addCars(carsArray);
-        console.log(`driverinfo: ${driver}`);
+        
         //create de user.driver
         const user = await User.create({
             name,
             email,
             password: passwordHash,
         }); 
-        console.log("\nOK\n");//
+        //Gambiarra! setting the id as forreingKey
+        const driver = await DriverInfo.create({id:user.id, home_location,});
+        await driver.addCars(carsArray);
         await driver.setUser(user);
-        //await user.addDriverInfo(user);
-
+        
         return res.status(201).json(driver);
        } catch (error) {
         return res.status(500).json(error.message);
@@ -54,9 +49,7 @@ module.exports = {
             return res.status(404).json({error: 'DriverInfo not found'});
         }
         if(password){
-            console.log(`\nbcryptSalt: ${saltRounds}\n`)//
             const passwordHash = await hash(password, 10);
-            console.log(`passwordHash: ${passwordHash}`)//
             driverUpdated =  Object.assign(driver, {password: passwordHash, ...others});
         }else{
             driverUpdated = Object.assign(driver, {...others});
@@ -72,9 +65,9 @@ module.exports = {
 
     async deleteDriver(req, res){
         const {driver_id} = req.params;
-        const driver = await DriverInfo.findByPk(driver_id);
+        const driver = await User.findByPk(driver_id);
 
-        if(!driver){
+        if(!driver || driver.userType == 'manager'){
             return res.status(404).json({error: 'DriverInfo not found'});
         }
 

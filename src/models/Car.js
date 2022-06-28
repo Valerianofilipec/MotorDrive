@@ -29,7 +29,6 @@ module.exports = (sequelize, DataTypes) => {
             references: {
                 model: 'DriverInfo',
                 key: 'id',
-                as: 'DriverInfoId'
             },
             onDelete: 'SET NULL',
             onUpdate: 'CASCADE'
@@ -40,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
     });
         
     Car.associate = models => {
-        Car.belongsTo(models.DriverInfo);
+        Car.belongsTo(models.DriverInfo,{foreignKey:'DriverInfoId'});
     }
 
     return Car;

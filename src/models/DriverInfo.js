@@ -1,9 +1,10 @@
 module.exports = (sequelize, DataTypes) =>{
   const DriverInfo = sequelize.define('DriverInfo',{
-    UserId:{
+    id:{
       type: DataTypes.INTEGER,
       foreignKey: true,
-      allowNull: true,
+      primaryKey:true,
+      //allowNull: true,
       references:{
         model:'User',
         key:'id',
@@ -24,7 +25,7 @@ module.exports = (sequelize, DataTypes) =>{
 
   DriverInfo.associate = (models) => {
     DriverInfo.hasMany(models.Car);
-    DriverInfo.belongsTo(models.User);
+    DriverInfo.belongsTo(models.User,{foreignKey:'id'});
   }
 
   return DriverInfo;
