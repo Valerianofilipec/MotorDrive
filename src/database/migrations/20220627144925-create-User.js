@@ -36,6 +36,7 @@ module.exports = {
       }
     },{
       timestamps:true,
+      freezeTableName: true,
     });
 
   },

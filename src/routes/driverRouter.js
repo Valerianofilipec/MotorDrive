@@ -1,28 +1,25 @@
 const driverRouter = require('express').Router();
-const DriversController = require('../controllers/DriversController.js');
-const { showAllCars, createCar, updateCar, deleteCar } = require('../controllers/CarsController.js');
-const managerAuth = require('./middlewares/manegerAuth.js');
-const driverAuth = require('./middlewares/driverAuth.js');
-const ensureAuth = require('./middlewares/ensureAuth.js');
+const DriverController = require('../controllers/DriverController.js');
+const { showAllCars, createCar, updateCar, deleteCar } = require('../controllers/CarController.js');
 
 
 //create driver
-driverRouter.post("/",ensureAuth, DriversController.createDriver);
+driverRouter.post("/", DriverController.createDriver);
 
 //update driver (by ID)
-driverRouter.put("/:driver_id",ensureAuth, DriversController.updateDriver);
+driverRouter.put("/:driver_id", DriverController.updateDriver);
 
 //delete driver (by ID)
-driverRouter.delete("/:driver_id",ensureAuth, DriversController.deleteDriver);
+driverRouter.delete("/:driver_id", DriverController.deleteDriver);
 
 //Driver Cars CRUD
 //get all Driver's cars
-driverRouter.get("/:driver_id/cars",ensureAuth, showAllCars);
+driverRouter.get("/:driver_id/cars", showAllCars);
 //create a new Driver's car
-driverRouter.post("/:driver_id/cars",ensureAuth, createCar);
+driverRouter.post("/:driver_id/cars", createCar);
 //update a Driver's car
-driverRouter.put("/:driver_id/cars/:car_id",ensureAuth, updateCar);
+driverRouter.put("/:driver_id/cars/:car_id", updateCar);
 //delete a Driver's car
-driverRouter.delete("/:driver_id/cars/:car_id",ensureAuth, deleteCar);
+driverRouter.delete("/:driver_id/cars/:car_id", deleteCar);
 
 module.exports = driverRouter;

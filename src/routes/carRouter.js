@@ -1,27 +1,27 @@
 const carRouter = require('express').Router();
-const CarsController = require('../controllers/CarsController.js');
+const CarController = require('../controllers/CarController.js');
 
 
 // get all cars
-carRouter.get('/', CarsController.showAllCars);
+carRouter.get('/', CarController.showAllCars);
 
 //create car (by driver & car IDs)
-carRouter.post('/', CarsController.createCar);
+carRouter.post('/', CarController.createCar);
 
 //update car (by driver & car IDs)
-carRouter.put('/:car_id', CarsController.updateCar);
+carRouter.put('/:car_id', CarController.updateCar);
 
 //delete car (by ID)
-carRouter.delete('/:car_id', CarsController.deleteCar);
+carRouter.delete('/:car_id', CarController.deleteCar);
 
 //get all cars geolocation
-carRouter.get('/geolocation', CarsController.showCarsLocations);
+carRouter.get('/geolocation', CarController.showCarsLocations);
 
 //get cars by brand
-carRouter.get('/brand/:brand', CarsController.showCarsByBrand);
+carRouter.get('/brand/:brand', CarController.showCarsByBrand);
 
 //get cars by proximity(longitude, latitude, radius_km)
-carRouter.get('/proximity?', CarsController.showCarsByProximity);
+carRouter.get('/proximity?', CarController.showCarsByProximity);
 
 
 module.exports = carRouter;

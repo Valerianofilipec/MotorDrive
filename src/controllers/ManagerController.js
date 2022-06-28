@@ -1,18 +1,19 @@
 require('dotenv/config');
 const {hash} = require('bcrypt');
-const {Managers} = require('../models');
+const {User} = require('../models');
 
 module.exports = {
     async createManager(req, res){
         const {name, email, password} = req.body;
-        const passwordHash = await  hash(password, 10);
+        const passwordHash = await hash(password, 10);
         try{
-            const newDriver = await Managers.create({
+            const manager = await User.create({
                 name,
                 email,
                 password: passwordHash,
-            }); 
-            return res.status(201).json(newDriver);
+                userType: 'manager'
+            });
+            return res.status(201).json(manager);
         } catch (error) {
          return res.status(500).json(error.message);
         }

@@ -21,24 +21,26 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             notEmpty: true,
         },
-        driverId: {
+        DriverInfoId: {
             type: DataTypes.INTEGER,
             foreignKey: true,
             allowNull: true,
+            default:null,
             references: {
                 model: 'DriverInfo',
-                key: 'userId',
-                as: 'driverId'
+                key: 'id',
+                as: 'DriverInfoId'
             },
             onDelete: 'SET NULL',
             onUpdate: 'CASCADE'
         }      
     },{
         timestamps: true,
+        freezeTableName: true,
     });
         
     Car.associate = models => {
-        Car.belongsTo(models.DriverInfo, { foreignKey: 'driverId'});
+        Car.belongsTo(models.DriverInfo);
     }
 
     return Car;

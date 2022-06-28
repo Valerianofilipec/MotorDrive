@@ -1,4 +1,4 @@
-const {Cars} = require('../models');
+const {Car} = require('../models');
 
 module.exports = {
     //create a new car with(out) the driverId
@@ -16,7 +16,7 @@ module.exports = {
             available
         } = req.body;
         try {
-            const car = await Cars.create({
+            const car = await Car.create({
                 brand,
                 model,
                 plate_number,
@@ -33,7 +33,7 @@ module.exports = {
 
     async updateCar(req, res){
         const {driver_id, car_id} = req.params;
-        const car = await Cars.findByPk(car_id);
+        const car = await Car.findByPk(car_id);
 
         if(!car){
             return res.status(404).json({error: 'Car not found'});
@@ -51,7 +51,7 @@ module.exports = {
 
     async deleteCar(req, res){
         const {driver_id,car_id} = req.params;
-        const car = await Cars.findByPk(car_id);
+        const car = await Car.findByPk(car_id);
 
         if(!car){
             return res.status(404).json({error: 'Car not found'});
@@ -73,7 +73,7 @@ module.exports = {
     async showCarsByBrand(req, res){
         const {brand} = req.params;
         try {
-            const cars = await Cars.findAll({ 
+            const cars = await Car.findAll({ 
                 where: {
                     brand
                 },
@@ -87,7 +87,7 @@ module.exports = {
 
     async showCarsLocations(req, res){
         try{
-            var carsLocations = await Cars.findAll({
+            var carsLocations = await Car.findAll({
                 attributes: ['geolocation']
             });
             return res.status(200).json(carsLocations);
@@ -102,7 +102,7 @@ module.exports = {
 
         try {
             // find all cars with geolocation within the radius
-            const cars = await Cars.findAll({
+            const cars = await Car.findAll({
                 where: {
                     geolocation: {
                         $within: {
@@ -133,13 +133,13 @@ module.exports = {
         try {
             let cars;
             if(driver_id){
-                cars = await Cars.findAll({
+                cars = await Car.findAll({
                     where: {
                         driverId: driver_id
                     }
                 });
             } else {
-                cars = await Cars.findAll();
+                cars = await Car.findAll();
             }
 
             console.log(cars[0])

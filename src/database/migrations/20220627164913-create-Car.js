@@ -30,14 +30,15 @@ module.exports = {
           allowNull: false,
           notEmpty: true,
       },
-      driverId:{
+      DriverInfoId:{
         type: Sequelize.INTEGER,
         defaultValue: null,
+        foreingKey: true,
         allowNull: true,
         references: {
           model: 'DriverInfo',
-          key: 'userId',
-          as: 'driverId',
+          key: 'id',
+          as:'DriverInfoId'
         },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
@@ -52,7 +53,8 @@ module.exports = {
       }
       },
       {
-        timestamps: true
+        timestamps: true,
+        freezeTableName: true,
       }
     );
   },

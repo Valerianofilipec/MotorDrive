@@ -1,11 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
     const User = sequelize.define('User',{
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            allowNull: false,
-            primaryKey: true,
-        },
         name: {
             type: DataTypes.STRING,
             allowNull: true,
@@ -23,21 +17,14 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.ENUM("driver", "manager"),
             defaultValue: "driver",
         },
-        createdAt: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        },
-        updatedAt: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        }
     },{
         timestamps:true,
+        freezeTableName: true,
     }
     );
 
     User.associate = (models) => {
-        User.hasOne(models.DriverInfo, {foreignKey:'userId'});
+        User.hasOne(models.DriverInfo);
       }
 
     return User;

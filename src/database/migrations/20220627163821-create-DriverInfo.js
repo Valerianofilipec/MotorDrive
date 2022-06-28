@@ -3,11 +3,16 @@
 module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.createTable('DriverInfo', {
-      userId:{
+      id: {
         type: Sequelize.INTEGER,
-        primaryKey:true,//!?
+        autoIncrement: true,
         allowNull: false,
-        notEmppty: true,
+        primaryKey: true
+      },
+      UserId:{
+        type: Sequelize.INTEGER,
+        foreignKey: true,
+        allowNull: true,
         references:{
           model:'User',
           key:'id',
@@ -21,10 +26,12 @@ module.exports = {
         allowNull: false,
         notEmppty: true,
       }
+     },{
+      freezeTableName: true,
      });
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('DrverInfo');
+    await queryInterface.dropTable('DriverInfo');
   }
 };

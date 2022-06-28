@@ -13,5 +13,5 @@ app.use(express.json());
 app.use(routes);
 
 app.listen(port,async()=>{
-    console.log(`MotorDrive's Server running!  ${port}` );
+    console.log(`MotorDrive's Server running!  ${port}`);
 });
