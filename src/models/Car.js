@@ -21,11 +21,6 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             notEmpty: true,
         },
-        available: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false,
-            defaultValue: true, //it must be associated to a driver, when created!
-        },
         driverId: {
             type: DataTypes.INTEGER,
             foreignKey: true,
@@ -35,14 +30,15 @@ module.exports = (sequelize, DataTypes) => {
                 key: 'userId',
                 as: 'driverId'
             },
-            onDelete: 'CASCADE'
+            onDelete: 'SET NULL',
+            onUpdate: 'CASCADE'
         }      
     },{
         timestamps: true,
     });
         
     Car.associate = models => {
-        Car.belongsTo(models.User);
+        Car.belongsTo(models.DriverInfo, { foreignKey: 'driverId'});
     }
 
     return Car;

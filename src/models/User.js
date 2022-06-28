@@ -37,8 +37,8 @@ module.exports = (sequelize, DataTypes) => {
     );
 
     User.associate = (models) => {
-        User.hasOne(models.Car);
-    }
-    
+        User.hasOne(models.DriverInfo, {foreignKey:'userId'});
+      }
+
     return User;
 }

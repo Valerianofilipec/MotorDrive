@@ -4,7 +4,8 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.createTable('DriverInfo', {
       userId:{
-        type: Sequelize.INTENGER,
+        type: Sequelize.INTEGER,
+        primaryKey:true,//!?
         allowNull: false,
         notEmppty: true,
         references:{
@@ -13,14 +14,13 @@ module.exports = {
           as: 'userId'
         },
         onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
+        onUpdate: 'CASCADE'
       },
       home_location:{
         type: Sequelize.STRING,
         allowNull: false,
         notEmppty: true,
-      },
-
+      }
      });
   },
 
