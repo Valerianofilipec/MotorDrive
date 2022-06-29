@@ -2,17 +2,19 @@ const driverRouter = require('express').Router();
 const DriverController = require('../controllers/DriverController.js');
 const { showAllCars, createCar, updateCar, deleteCar } = require('../controllers/CarController.js');
 
+const managerAuth = require('./middlewares/managerAuth.js');
 
+//Only Manager Authorized!
 //create driver
-driverRouter.post("/", DriverController.createDriver);
+driverRouter.post("/", managerAuth, DriverController.createDriver);
 
 //update driver (by ID)
-driverRouter.put("/:driver_id", DriverController.updateDriver);
+driverRouter.put("/:driver_id",managerAuth, DriverController.updateDriver);
 
 //delete driver (by ID)
-driverRouter.delete("/:driver_id", DriverController.deleteDriver);
+driverRouter.delete("/:driver_id",managerAuth, DriverController.deleteDriver);
 
-//Driver Cars CRUD
+//Manager and Driver Authorized!
 //get all Driver's cars
 driverRouter.get("/:driver_id/cars", showAllCars);
 //create a new Driver's car

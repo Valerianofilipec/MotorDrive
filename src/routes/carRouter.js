@@ -1,7 +1,8 @@
 const carRouter = require('express').Router();
 const CarController = require('../controllers/CarController.js');
+const managerAuth = require('./middlewares/managerAuth.js');
 
-
+carRouter.use(managerAuth);
 // get all cars
 carRouter.get('/', CarController.showAllCars);
 

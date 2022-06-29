@@ -2,7 +2,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 const {compare} = require('bcrypt');
 const {sign} = require('jsonwebtoken');
-const {Drivers, Managers} = require('../models');
+const {User} = require('../models');
 
 
 module.exports = {
@@ -10,21 +10,15 @@ module.exports = {
         const {email, password} = req.body;
 
         //check if user with email exists (! refatorar esta palhaçada, pois está fazendo duas buscas em tabelas diferentes)
-        let user = await Managers.findOne({where: {email}});//? como eu sei que o user é um manager ou driver?
+        let user = await User.findOne({where: {email}});
         if(!user){
-            user = await Drivers.findOne({where: {email}});
-            if(!user){
-                return res.status(404).json({error: 'User not found'});
-            }
+            return res.status(404).json({error: 'User not found'});
         }
 
         // check if password is correct
-        console.log(user.password);//
         const passwordMatch = await compare(password, user.password);
-        console.log(passwordMatch);//
-        console.log(user.id);//
         if(!passwordMatch){
-            return  res.status(400).json({error: 'Email or Password incorrect'});
+            return  res.status(406).json({error: 'Email or Password incorrect'});
         }
 
         // genarate token
@@ -32,16 +26,19 @@ module.exports = {
             const token = sign({user:{
                 id: user.id,
                 email: user.email,
-            }},processs.env.JWT_SECRET, {
-                expiresIn: '1d',
+                userType: user.userType
+            }},"4602bcc8edfaf52d4bf84330f90e6e1d", {
+                expiresIn: '1h',
             });     
             
+            req.token = token;
             return res.status(200).json({user:{
                 id: user.id,
                 email: user.email,
+                userType: user.userType,
             },token});
         } catch (error) {
-            return res.status(500).json({error: 'Error comparing password'});
+            return res.status(500).json({error: 'error Generate a token'});
         }
     }
     
