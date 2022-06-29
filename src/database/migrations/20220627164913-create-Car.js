@@ -32,12 +32,13 @@ module.exports = {
       },
       DriverInfoId:{
         type: Sequelize.INTEGER,
-        defaultValue: null,
         foreingKey: true,
         allowNull: true,
+        defaultValue: null,
         references: {
           model: 'DriverInfo',
           key: 'id',
+          as:'DriverInfoId'
         },
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE',

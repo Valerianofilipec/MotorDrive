@@ -3,17 +3,16 @@
 module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.createTable('DriverInfo', {
-      /*id: {
+      id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
-      },*/
-      id:{
+      },
+      UserId:{
         type: Sequelize.INTEGER,
         foreignKey: true,
-        primaryKey:true,
-        //allowNull: true,
+        allowNull: true,
         references:{
           model:'User',
           key:'id',

@@ -1,14 +1,13 @@
 module.exports = (sequelize, DataTypes) =>{
   const DriverInfo = sequelize.define('DriverInfo',{
-    id:{
+    UserId:{
       type: DataTypes.INTEGER,
       foreignKey: true,
-      primaryKey:true,
-      //allowNull: true,
+      allowNull: false,
       references:{
         model:'User',
         key:'id',
-        as:'userId'
+        as:'UserId'
       },
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
@@ -24,8 +23,8 @@ module.exports = (sequelize, DataTypes) =>{
   });
 
   DriverInfo.associate = (models) => {
-    DriverInfo.hasMany(models.Car);
-    DriverInfo.belongsTo(models.User,{foreignKey:'id'});
+    DriverInfo.hasMany(models.Car,{foreignKey:'DriverInfoId'});
+    DriverInfo.belongsTo(models.User,{foreignKey:'UserId'});
   }
 
   return DriverInfo;
