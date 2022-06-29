@@ -42,17 +42,29 @@ module.exports = {
     //update driver (except cars associations) 
     async updateDriver(req, res){
         const {driver_id} = req.params;
-        const {password, ...others} = req.body;
-        const driver = await DriverInfo.findByPk(driver_id);
+        const {password, home_location,...others} = req.body;
+        const driver = await DriverInfo.findByPk(driver_id, {include: User});
         let driverUpdated;
-        if(!driver){
+        if(!driver || driver.userType == 'manager'){
             return res.status(404).json({error: 'DriverInfo not found'});
         }
         if(password){
             const passwordHash = await hash(password, 10);
-            driverUpdated =  Object.assign(driver, {password: passwordHash, ...others});
+            driverUpdated =  Object.assign(driver, {
+                User:{
+                    password: passwordHash, 
+                    ...others
+                },
+                home_location
+            });
         }else{
-            driverUpdated = Object.assign(driver, {...others});
+            driverUpdated = Object.assign(driver, {
+                User:{
+                    ...others
+                },
+                home_location,
+            });
+                    
         }
         try {
             await driverUpdated.save();
