@@ -1,3 +1,4 @@
+const GEOMETRY = require('sequelize').DataTypes.GEOMETRY;
 const {Car} = require('../models');
 
 module.exports = {
@@ -105,25 +106,16 @@ module.exports = {
             const cars = await Car.findAll({
                 where: {
                     geolocation: {
-                        $within: {
-                            $centerSphere: [
-                                [longitude, latitude], radius
-                            ]
+                        [GEOMETRY.ST_DWithin]: {
+                            [GEOMETRY.ST_MakePoint]: [longitude, latitude],
+                            radius
                         }
                     }
-                },
-                attributes: ['model', 'plate_number', 'geolocation'],
-                include: [{
-                    model: Drivers,
-                    attributes: ['name'],
-                    as: 'driver'
-                }]
+                }
             });
-
-            console.log(cars);
             return res.status(200).json(cars);
         } catch (error) {
-            console.log(error)
+            console.log(error);
             return res.status(500).json(error.message);
         }
     },
