@@ -1,9 +1,9 @@
 const {Car} = require('../models');
 
 module.exports = {
-    //create a new car with(out) the driverId
+    //create a new car with(out) the UserId
     async createCar(req, res){
-        const {driver_id :driverId} = req.params;
+        const {driver_id :UserId} = req.params;
 
         const {
             brand,
@@ -22,7 +22,7 @@ module.exports = {
                 plate_number,
                 geolocation,
                 available,
-                driverId 
+                UserId 
             });
             return res.status(201).json(car);
             
@@ -57,7 +57,7 @@ module.exports = {
             return res.status(404).json({error: 'Car not found'});
         }
         if(driver_id){//if the driver_id is passed, check if it's the same driver
-            if(car.driverId != driver_id){
+            if(car.UserId != driver_id){
                 return res.status(400).json({error: 'Driver not authorized'});
             }
         }
@@ -129,13 +129,13 @@ module.exports = {
     },
 
     async showAllCars(req, res){
-        const {driver_id} = req.params;
+        const {driver_id} = req.params;//user.id
         try {
             let cars;
             if(driver_id){
                 cars = await Car.findAll({
                     where: {
-                        driverId: driver_id
+                        UserId: driver_id
                     }
                 });
             } else {

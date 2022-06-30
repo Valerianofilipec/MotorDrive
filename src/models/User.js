@@ -25,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
 
     User.associate = (models) => {
         User.hasOne(models.DriverInfo,{foreingKey:'UserId'});
+        User.hasMany(models.Car,{foreingKey:'UserId'})
       }
 
     return User;

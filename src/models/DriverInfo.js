@@ -23,7 +23,6 @@ module.exports = (sequelize, DataTypes) =>{
   });
 
   DriverInfo.associate = (models) => {
-    DriverInfo.hasMany(models.Car,{foreignKey:'DriverInfoId'});
     DriverInfo.belongsTo(models.User,{foreignKey:'UserId'});
   }
 

@@ -30,18 +30,18 @@ module.exports = {
           allowNull: false,
           notEmpty: true,
       },
-      DriverInfoId:{
+      UserId: {
         type: Sequelize.INTEGER,
-        foreingKey: true,
+        foreignKey: true,
         allowNull: true,
-        defaultValue: null,
+        default:null,
         references: {
-          model: 'DriverInfo',
-          key: 'id',
-          as:'DriverInfoId'
+            model: 'User',
+            key: 'id',
+            as: 'UserId'
         },
         onDelete: 'SET NULL',
-        onUpdate: 'CASCADE',
+        onUpdate: 'CASCADE'
       },
       createdAt:{
           type: Sequelize.DATE,
