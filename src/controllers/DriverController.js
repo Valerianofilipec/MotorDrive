@@ -62,61 +62,40 @@ module.exports = {
 
     //update driver (except cars associations) 
     async updateDriver(req, res){
+        const {password, home_location, ...others} = req.body;
         const {driver_id} = req.params;
-
         const driver = await User.findByPk(driver_id);
-        /*driver ={
-            id, createAt, updateAt
-            name,
-            email,
-            password,
-            userType,
-            DriverInfo:{
-                id,
-                UserId,
-                home_location,
-            },
-            Car:{
-                id, createAt, updateAt,
-                UserId,
-                brand,
-                model,
-                plate_number,
-                geolocation:{...}
-            }
-        }*/
         if(!driver || driver.userType == 'manager'){
             return res.status(404).json({error: 'DriverInfo not found'});
         }
-  
-        const {password, home_location,...others} = req.body;
-        let driverUpdated;
-        if(password){
-            const passwordHash = await hash(password, 10);
-            driverUpdated =  Object.assign(driver, {
-                password: passwordHash, 
-                ...others,
-            });
-        }else{
-            driverUpdated = Object.assign(driver, {
-                ...others,
-            });           
-        }
+
+        const passwordHash = password && await hash(password, 10);
+
         try {
-            //Gambiarra! try using association statement insted 
-            if(home_location){
-                let driverInfo = await DriverInfo.findOne({where:{
-                    UserId:driver.id
-                }});
-                let driverInfoU = {...driverInfo, home_location,};
-                await driverInfoU.save();
+            let driverUpdated;
+            if(password){
+                const passwordHash = await hash(password, 10);
+                driverUpdated =  Object.assign(driver, {
+                    password: passwordHash, 
+                    ...others,
+                });
+            }else{
+                driverUpdated = Object.assign(driver, {
+                    ...others,
+                });           
             }
             await driverUpdated.save();
+
+            if(home_location){
+                await DriverInfo.update({home_location},{where: {UserId: driver_id}});
+            }
+
+            return res.status(200).json(driverUpdated);
+
         } catch (error) {
             return res.status(500).json({error: 'Error updating driver'});
         }
-        return res.status(200).json(driverUpdated);
-
+        
     },
 
     async deleteDriver(req, res){
