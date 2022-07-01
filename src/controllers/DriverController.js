@@ -18,21 +18,33 @@ module.exports = {
             if(typeof cars[0] == 'number'){
                 await cars.forEach( async car => {
                     let carObj = await Car.findByPk(car);
-                    console.log(carObj);
                     if(carObj && !carObj.UserId){
                         carsArray.push(carObj);
                     }
                 });
             } else {
                 await cars.forEach(async car => {
-                    let carObj = await Car.create(car);
+                    const {
+                        brand,
+                        model, 
+                        plate_number,
+                        geolocation= {
+                            "type": "Point",
+                            "coordinates": [41.1663061,-8.6490692]
+                        }, 
+                    } = car;
+                    let carObj = await Car.create({
+                        brand,
+                        model,
+                        plate_number,
+                        geolocation,
+                    });
                     carsArray.push(carObj);
                 });
             }
 
             const passwordHash = await hash(password, 10);
 
-            console.log(`\n carsArray.length: ${carsArray.length} `)
             if(carsArray.length != 0){
                 //create de user.driver
                 const user = await User.create({
@@ -44,9 +56,6 @@ module.exports = {
                 //Gambiarra! creatre the DriverInfo after user, and then  associate them
                 const driver = await DriverInfo.create({UserId:user.id, home_location,});
                 await driver.setUser(user);
-
-                console.log(`\n carsArray: ${JSON.stringify(carsArray)} \n`);
-                console.log(carsArray.length)
                 await user.addCars(carsArray);
                 
                 return res.status(201).json(driver);

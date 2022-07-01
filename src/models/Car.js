@@ -16,11 +16,6 @@ module.exports = (sequelize, DataTypes) => {
             notEmpty: true,
             unique: true
         },
-        geolocation: {
-            type: DataTypes.GEOMETRY('POINT'),
-            allowNull: false,
-            notEmpty: true,
-        },
         UserId: {
             type: DataTypes.INTEGER,
             foreignKey: true,
@@ -41,6 +36,7 @@ module.exports = (sequelize, DataTypes) => {
         
     Car.associate = models => {
         Car.belongsTo(models.User,{foreignKey:'UserId'});
+        Car.hasOne(models.Geolocation,{foreignKey:'CarId'});
     }
 
     return Car;

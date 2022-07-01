@@ -1,5 +1,6 @@
-const GEOMETRY = require('sequelize').DataTypes.GEOMETRY;
-const {Car} = require('../models');
+const { Op } = require('sequelize');
+const {sequelize} = require('sequelize')
+const {Car, Geolocation} = require('../models');
 
 module.exports = {
     //create a new car with(out) the UserId
@@ -10,20 +11,17 @@ module.exports = {
             brand,
             model, 
             plate_number,
-            geolocation= {
-                "type": "Point",
-                "coordinates": [41.1663061,-8.6490692]
-            }, 
-            available
+            geolocation, //:{longitude, latitude}
         } = req.body;
         try {
             const car = await Car.create({
                 brand,
                 model,
                 plate_number,
-                geolocation,
-                available,
+                Geolocation: {...geolocation},
                 UserId 
+            },{
+               include:[Geolocation]
             });
             return res.status(201).json(car);
             
@@ -34,16 +32,24 @@ module.exports = {
 
     async updateCar(req, res){
         const {driver_id, car_id} = req.params;
-        const car = await Car.findByPk(car_id);
+        const car = await Car.findByPk(car_id,{include:[Geolocation]});
 
         if(!car){
             return res.status(404).json({error: 'Car not found'});
         }
-       
-        const carUpdated =  Object.assign(car, req.body);
         try {
-            await carUpdated.save();
-            return res.status(200).json(carUpdated);
+            let {geolocation,...others} = req.body;
+            if(geolocation){
+                await Geolocation.update(geolocation,{
+                    where:{CarId: car_id}
+                });
+            }
+            let carUpdated = others && await Car.update({
+            ...others,
+            },{
+                where:{id:car_id},
+            });
+            return res.sendStatus(200);
         } catch (error) {
             return res.status(500).json({error: 'Error updating car'});
         }
@@ -78,7 +84,7 @@ module.exports = {
                 where: {
                     brand
                 },
-                attributes: ['model', 'plate_number', 'available']
+                attributes: ['model', 'plate_number']
             });
             return res.status(200).json(cars);
         } catch (error) {
@@ -88,9 +94,7 @@ module.exports = {
 
     async showCarsLocations(req, res){
         try{
-            var carsLocations = await Car.findAll({
-                attributes: ['geolocation']
-            });
+            var carsLocations = await Geolocation.findAll();
             return res.status(200).json(carsLocations);
         } catch (error) {
             return res.status(500).json({error: 'Error getting cars'});
@@ -101,21 +105,19 @@ module.exports = {
     async showCarsByProximity(req, res){
         const {longitude,latitude, radius} = req.query;
 
+        const [lonMax,lonMin,latMax,latMin] = [longitude+radius,longitude-radius,latitude+radius,latitude-radius];
+
         try {
             // find all cars with geolocation within the radius
-            const cars = await Car.findAll({
+            const cars = await Geolocation.findAll({
                 where: {
-                    geolocation: {
-                        [GEOMETRY.ST_DWithin]: {
-                            [GEOMETRY.ST_MakePoint]: [longitude, latitude],
-                            radius
-                        }
-                    }
-                }
+                    longitude:{[Op.between]:[lonMin,lonMax]},
+                    latitude:{[Op.between]:[latMin,latMax]}
+                },
+                include: {model:Car, attributes:['model','plate_number']}
             });
             return res.status(200).json(cars);
         } catch (error) {
-            console.log(error);
             return res.status(500).json(error.message);
         }
     },
@@ -128,13 +130,12 @@ module.exports = {
                 cars = await Car.findAll({
                     where: {
                         UserId: driver_id
-                    }
+                    },
+                    include: Geolocation
                 });
             } else {
-                cars = await Car.findAll();
+                cars = await Car.findAll({include:Geolocation});
             }
-
-            console.log(cars[0])
             return res.status(200).json(cars);
         } catch (error) {
             return res.status(500).json({error: 'Error getting cars'});

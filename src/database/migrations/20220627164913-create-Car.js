@@ -25,11 +25,6 @@ module.exports = {
           notEmpty: true,
           unique: true,
       },
-      geolocation: {
-          type: Sequelize.GEOMETRY('POINT'),
-          allowNull: false,
-          notEmpty: true,
-      },
       UserId: {
         type: Sequelize.INTEGER,
         foreignKey: true,
