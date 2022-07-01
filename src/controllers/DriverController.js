@@ -1,6 +1,6 @@
 require ("dotenv/config"); 
 const {hash} = require("bcrypt");
-const {Car, User, DriverInfo} = require("../models");
+const {Car, User, DriverInfo, Geolocation} = require("../models");
 
 const saltRounds = process.env.BCRYPT_SALT;
 
@@ -16,31 +16,32 @@ module.exports = {
     
         try {
             if(typeof cars[0] == 'number'){
-                await cars.forEach( async car => {
-                    let carObj = await Car.findByPk(car);
+                for(let i = 0; i < cars.length; i++){
+                    let carObj = await Car.findByPk(cars[i],{
+                        include:[Geolocation]
+                     });
                     if(carObj && !carObj.UserId){
                         carsArray.push(carObj);
                     }
-                });
+                };
             } else {
-                await cars.forEach(async car => {
-                    const {
+                for(let i = 0; i < cars.length; i++){
+                    let {
                         brand,
                         model, 
                         plate_number,
-                        geolocation= {
-                            "type": "Point",
-                            "coordinates": [41.1663061,-8.6490692]
-                        }, 
-                    } = car;
+                        geolocation
+                    } = cars[i];
                     let carObj = await Car.create({
                         brand,
                         model,
                         plate_number,
-                        geolocation,
-                    });
+                        Geolocation: {...geolocation},
+                    },{
+                        include:[Geolocation]
+                     });
                     carsArray.push(carObj);
-                });
+                }
             }
 
             const passwordHash = await hash(password, 10);

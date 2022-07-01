@@ -19,7 +19,6 @@ module.exports = {
                 model,
                 plate_number,
                 Geolocation: {...geolocation},
-                UserId 
             },{
                include:[Geolocation]
             });
