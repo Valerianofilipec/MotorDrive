@@ -1,4 +1,3 @@
-const GEOMETRY = require('sequelize').DataTypes.GEOMETRY;
 const {Car} = require('../models');
 
 module.exports = {
@@ -100,20 +99,32 @@ module.exports = {
     //get all cars by proximity (latitude, longitude, radius)
     async showCarsByProximity(req, res){
         const {longitude,latitude, radius} = req.query;
-
+      
+        const point = Car.sequelize.fn('ST_MakePoint', longitude, latitude);
+        console.log(point);    
         try {
-            // find all cars with geolocation within the radius
+            //find all cars with geolocation within the radius
+            // where: {
+            //     geolocation: {
+            //         [Car.sequelize.Op.ST_DWithin]: {
+            //             point,
+            //             radius
+            //         }
+            //     }
+            // }
+
             const cars = await Car.findAll({
-                where: {
-                    geolocation: {
-                        [GEOMETRY.ST_DWithin]: {
-                            [GEOMETRY.ST_MakePoint]: [longitude, latitude],
-                            radius
-                        }
-                    }
-                }
+                where: Car.sequelize.where(
+                    Car.sequelize.fn(
+                        'ST_DWithin',
+                        Car.sequelize.col('geolocation'),
+                        point,
+                        radius,
+                    ),
+                    true,
+                    ),
             });
-            return res.status(200).json(cars);
+             return res.status(200).json('oi');
         } catch (error) {
             console.log(error);
             return res.status(500).json(error.message);
