@@ -2,7 +2,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 const {compare} = require('bcrypt');
 const {sign} = require('jsonwebtoken');
-const {User} = require('../models');
+const {User} = require('../../models');
 
 
 module.exports = {

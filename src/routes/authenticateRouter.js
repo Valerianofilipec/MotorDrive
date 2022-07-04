@@ -1,5 +1,5 @@
 const authenticateRouter = require('express').Router();
-const {login} = require('../controllers/UserAuth.js');
+const {login} = require('../controllers/validators/UserAuth.js');
 
 authenticateRouter.post('/login', login);
 

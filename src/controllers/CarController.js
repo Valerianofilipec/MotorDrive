@@ -1,5 +1,4 @@
-const { Op } = require('sequelize');
-const {sequelize} = require('sequelize')
+const { Op } = require('sequelize');//o certo seria chamar esta function dentro da instancia de um modelo
 const {Car, Geolocation} = require('../models');
 
 module.exports = {
