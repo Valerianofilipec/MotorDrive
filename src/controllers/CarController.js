@@ -1,142 +1,89 @@
-const { Op } = require('sequelize');//o certo seria chamar esta function dentro da instancia de um modelo
-const {Car, Geolocation} = require('../models');
+const {createCar, showAllCars, showCarsByBrand, showCarsLocations, showCarsByProximity, updateCar, deleteCar} = require('./repositories/CarRepository.js');
 
-module.exports = {
-    //create a new car with(out) the UserId
-    async createCar(req, res){
+module.exports =  {
+    //CRUD
+    async create(req, res){
         const {driver_id :UserId} = req.params;
-
         const {
             brand,
             model, 
             plate_number,
             geolocation, //:{longitude, latitude}
         } = req.body;
+
         try {
-            const car = await Car.create({
-                brand,
-                model,
-                plate_number,
-                Geolocation: {...geolocation},
-            },{
-               include:[Geolocation]
-            });
+            const car = await createCar({brand, model, plate_number, geolocation}, UserId)
             return res.status(201).json(car);
-            
         } catch (error) {
             return res.status(500).json(error.message);
         }
     },
 
-    async updateCar(req, res){
-        const {driver_id, car_id} = req.params;
-        const car = await Car.findByPk(car_id,{include:[Geolocation]});
-
-        if(!car){
-            return res.status(404).json({error: 'Car not found'});
-        }
+    async index(req, res){
+        const {driver_id: UserId} = req.params;
         try {
-            let {geolocation,...others} = req.body;
-            if(geolocation){
-                await Geolocation.update(geolocation,{
-                    where:{CarId: car_id}
-                });
-            }
-            let carUpdated = others && await Car.update({
-            ...others,
-            },{
-                where:{id:car_id},
-            });
+            const cars = await showAllCars(UserId);
+            return res.status(200).json(cars);
+        } catch (error) {
+            return res.status(500).json({error: 'Error getting cars'});
+        }
+    },
+
+    async indexByBrand(req, res){
+        const {brand} = req.params;
+
+        try {
+            const cars = await showCarsByBrand(brand);
+            return res.status(200).json(cars);
+        } catch (error) {
+            return res.status(500).json({error: 'Error getting cars'});
+        }
+    },
+
+    async indexLocations(req, res){
+        try {
+            const cars = await showCarsLocations();
+            return res.status(200).json(cars);
+        } catch (error) {
+            return res.status(500).json({error: 'Error getting cars'});
+        }
+    },
+
+    async indexByProximity(req, res){
+        // query selection parameters: latitude, longitude & radius of bounding circle
+        const {
+            longitude,
+            latitude, 
+            radius
+        } = req.query;
+        try {
+            const cars = await showCarsByProximity(longitude,latitude,radius);
+            return res.status(200).json(cars);
+        } catch (error) {
+            return res.status(500).json(error.message);
+        }
+    },
+
+    async update(req, res){
+        const {driver_id:UserId, car_id} = req.params;
+        try {
+            await updateCar(UserId, car_id);
             return res.sendStatus(200);
         } catch (error) {
             return res.status(500).json({error: 'Error updating car'});
         }
-
     },
 
-    async deleteCar(req, res){
-        const {driver_id,car_id} = req.params;
-        const car = await Car.findByPk(car_id);
-
-        if(!car){
-            return res.status(404).json({error: 'Car not found'});
-        }
-        if(driver_id){//if the driver_id is passed, check if it's the same driver
-            if(car.UserId != driver_id){
-                return res.status(400).json({error: 'Driver not authorized'});
-            }
-        }
+    async delete(req, res){
+        const {driver_id: UserId,car_id} = req.params;
         try {
-            await car.destroy();
+            await deleteCar(UserId, car_id);
             return res.status(200).json({message: 'Car deleted'});
         } catch (error) {
-            return res.status(500).json({error: 'Error deleting car'});
-        }
-
-    },
-
-    async showCarsByBrand(req, res){
-        const {brand} = req.params;
-        try {
-            const cars = await Car.findAll({ 
-                where: {
-                    brand
-                },
-                attributes: ['model', 'plate_number']
-            });
-            return res.status(200).json(cars);
-        } catch (error) {
-            return res.status(500).json({error: 'Error getting cars'});
-        }
-    },
-
-    async showCarsLocations(req, res){
-        try{
-            var carsLocations = await Geolocation.findAll();
-            return res.status(200).json(carsLocations);
-        } catch (error) {
-            return res.status(500).json({error: 'Error getting cars'});
-        }
-    },
-
-    //get all cars by proximity (latitude, longitude, radius)
-    async showCarsByProximity(req, res){
-        const {longitude,latitude, radius} = req.query;
-
-        const [lonMax,lonMin,latMax,latMin] = [longitude+radius,longitude-radius,latitude+radius,latitude-radius];
-
-        try {
-            // find all cars with geolocation within the radius
-            const cars = await Geolocation.findAll({
-                where: {
-                    longitude:{[Op.between]:[lonMin,lonMax]},
-                    latitude:{[Op.between]:[latMin,latMax]}
-                },
-                include: {model:Car, attributes:['model','plate_number']}
-            });
-            return res.status(200).json(cars);
-        } catch (error) {
+            if(error.message == 'Driver not authorized' ){
+                return res.status(400).json(error.message);
+            }
             return res.status(500).json(error.message);
         }
-    },
-
-    async showAllCars(req, res){
-        const {driver_id} = req.params;//user.id
-        try {
-            let cars;
-            if(driver_id){
-                cars = await Car.findAll({
-                    where: {
-                        UserId: driver_id
-                    },
-                    include: Geolocation
-                });
-            } else {
-                cars = await Car.findAll({include:Geolocation});
-            }
-            return res.status(200).json(cars);
-        } catch (error) {
-            return res.status(500).json({error: 'Error getting cars'});
-        }
-    },
+    }
 }
