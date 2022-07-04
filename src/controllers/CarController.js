@@ -1,4 +1,12 @@
-const {createCar, showAllCars, showCarsByBrand, showCarsLocations, showCarsByProximity, updateCar, deleteCar} = require('./repositories/CarRepository.js');
+const {
+    createCar, 
+    showAllCars, 
+    showCarsByBrand, 
+    showCarsLocations, 
+    showCarsByProximity, 
+    updateCar, 
+    deleteCar
+} = require('./repositories/CarRepository.js');
 
 module.exports =  {
     //CRUD

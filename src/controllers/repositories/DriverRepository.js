@@ -5,12 +5,12 @@ const {Car, User, DriverInfo, Geolocation} = require("../models");
 const saltRounds = process.env.BCRYPT_SALT;
 
 module.exports = {
-    async createDriver(req, res){
+    async createDriver({name, email, home_location, password, cars}){
 
-        const {name, email, home_location, password, cars} = req.body;
         let carsArray = [];
         // set the type of list cars to array
         if(!cars[0]){
+            throw error.message = 'cars list invalid'
             return res.status(400).json({error: 'cars list invalid'});
         }
     
