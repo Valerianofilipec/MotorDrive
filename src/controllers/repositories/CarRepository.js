@@ -1,5 +1,6 @@
 const { Op } = require('sequelize');//o certo seria chamar esta function dentro da instancia de um modelo
 const {Car, Geolocation} = require('../../models');
+const AppError = require('../errors/AppError');
 
 module.exports = {
     //create a new car with(out) the UserId
@@ -17,19 +18,20 @@ module.exports = {
             
             return car;
         } catch (error) {
-            throw error;
+            throw new AppError(error.message, 500);
         }
     },
 
-    async updateCar(UserId,car_id){
+    async updateCar(UserId=undefined,car_id, obj){
         try {
+            const {geolocation,...others} = obj;
             const car = await Car.findByPk(car_id,{include:[Geolocation]});
     
             if(!car){
-                return res.status(404).json({error: 'Car not found'});
+                throw new AppError('Car not found',404);
             }
 
-            let {geolocation,...others} = req.body;
+            
             if(geolocation){
                 await Geolocation.update(geolocation,{
                     where:{CarId: car_id}
@@ -42,7 +44,7 @@ module.exports = {
             });
            return;
         } catch (error) {
-            throw error;
+            throw new AppError('Error updating car',500);
         }
 
     },
@@ -56,14 +58,14 @@ module.exports = {
         }
         if(UserId){//if the UserId is passed, check if it's the same driver
             if(car.UserId != UserId){
-                throw error.message='Driver not authorized';
+                throw new AppError('Driver not authorized',400);
             }
         }
         try {
             await car.destroy();
             return;
         } catch (error) {
-           throw error.message='Error deleting car';
+           throw new AppError('Error deleting car',500);
         }
 
     },
@@ -78,7 +80,7 @@ module.exports = {
             });
             return cars;
         } catch (error) {
-            throw error;
+            throw new AppError('Error getting cars',500);
         }
     },
 
@@ -87,7 +89,7 @@ module.exports = {
             let cars = await Geolocation.findAll();
             return cars;
         } catch (error) {
-            throw error;
+            throw new AppError('Error getting cars Locations',500);
         }
     },
 
@@ -115,7 +117,7 @@ module.exports = {
             });
             return cars;
         } catch (error) {
-           throw error;
+           throw new AppError(error.message, 500);
         }
     },
 
@@ -134,7 +136,7 @@ module.exports = {
             }
            return cars;;
         } catch (error) {
-            throw error;
+            throw new AppError('Error getting cars',500);
         }
     },
 }

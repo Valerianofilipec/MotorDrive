@@ -1,17 +1,17 @@
 require ("dotenv/config"); 
 const {hash} = require("bcrypt");
+const AppError = require("../errors/AppError");
 const {Car, User, DriverInfo, Geolocation} = require("../models");
 
 const saltRounds = process.env.BCRYPT_SALT;
 
 module.exports = {
-    async createDriver({name, email, home_location, password, cars}){
-
+    async createDriver(obj){
+        const {name, email, home_location, password, cars} = obj;
         let carsArray = [];
         // set the type of list cars to array
         if(!cars[0]){
-            throw error.message = 'cars list invalid'
-            return res.status(400).json({error: 'cars list invalid'});
+            throw new AppError('cars list invalid', 400);
         }
     
         try {
@@ -59,14 +59,13 @@ module.exports = {
                 await driver.setUser(user);
                 await user.addCars(carsArray);
                 
-                return res.status(201).json(driver);
+                return driver;
             } else {
-                return res.status(406).json({error: 'Invalid cars: not availables'})
+                throw new AppError('Invalid cars: not availables',406);
             }
             
             } catch (error) {
-                //await driver.destroy();
-                return res.status(500).json(error.message);
+                throw new AppError(error.message, 500);
             }
     },
 

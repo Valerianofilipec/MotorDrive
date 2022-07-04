@@ -23,7 +23,7 @@ module.exports =  {
             const car = await createCar({brand, model, plate_number, geolocation}, UserId)
             return res.status(201).json(car);
         } catch (error) {
-            return res.status(500).json(error.message);
+            return res.status(error.statusCode).json(error.message);
         }
     },
 
@@ -33,7 +33,7 @@ module.exports =  {
             const cars = await showAllCars(UserId);
             return res.status(200).json(cars);
         } catch (error) {
-            return res.status(500).json({error: 'Error getting cars'});
+            return res.status(error.statusCode).json(error.message);
         }
     },
 
@@ -44,7 +44,7 @@ module.exports =  {
             const cars = await showCarsByBrand(brand);
             return res.status(200).json(cars);
         } catch (error) {
-            return res.status(500).json({error: 'Error getting cars'});
+            return res.status(error.statusCode).json(error.message);
         }
     },
 
@@ -53,7 +53,7 @@ module.exports =  {
             const cars = await showCarsLocations();
             return res.status(200).json(cars);
         } catch (error) {
-            return res.status(500).json({error: 'Error getting cars'});
+            return res.status(error.statusCode).json(error.message);
         }
     },
 
@@ -68,20 +68,21 @@ module.exports =  {
             const cars = await showCarsByProximity(longitude,latitude,radius);
             return res.status(200).json(cars);
         } catch (error) {
-            return res.status(500).json(error.message);
+            return res.status(error.statusCode).json(error.message);
         }
     },
 
     async update(req, res){
         const {driver_id:UserId, car_id} = req.params;
+        let {geolocation,...others} = req.body;
         try {
-            await updateCar(UserId, car_id);
+            await updateCar(UserId, car_id,{geolocation,...others});
             return res.sendStatus(200);
         } catch (error) {
-            return res.status(500).json({error: 'Error updating car'});
+            return res.status(error.statusCode).json(error.message);
         }
     },
-
+    
     async delete(req, res){
         const {driver_id: UserId,car_id} = req.params;
         try {
@@ -91,7 +92,7 @@ module.exports =  {
             if(error.message == 'Driver not authorized' ){
                 return res.status(400).json(error.message);
             }
-            return res.status(500).json(error.message);
+            return res.status(error.statusCode).json(error.message);
         }
-    }
+    },
 }
