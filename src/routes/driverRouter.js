@@ -1,6 +1,7 @@
 const driverRouter = require('express').Router();
 const DriverController = require('../controllers/DriverController.js');
 const CarController = require('../controllers/CarController.js');
+const {driverIDvalidation} = require('../controllers/validators/driverValidator.js');
 
 const managerAuth = require('./middlewares/managerAuth.js');
 
@@ -19,12 +20,12 @@ driverRouter.delete("/:driver_id",managerAuth, DriverController.delete);
 
 //Manager and Driver Authorized!
 //get all Driver's cars
-driverRouter.get("/:driver_id/cars", CarController.index);
+driverRouter.get("/:driver_id/cars",driverIDvalidation, CarController.index);
 //create a new Driver's car
-driverRouter.post("/:driver_id/cars", CarController.create);
+driverRouter.post("/:driver_id/cars",driverIDvalidation, CarController.create);
 //update a Driver's car
-driverRouter.put("/:driver_id/cars/:car_id", CarController.update);
+driverRouter.put("/:driver_id/cars/:car_id",driverIDvalidation, CarController.update);
 //delete a Driver's car
-driverRouter.delete("/:driver_id/cars/:car_id", CarController.delete);
+driverRouter.delete("/:driver_id/cars/:car_id",driverIDvalidation, CarController.delete);
 
 module.exports = driverRouter;

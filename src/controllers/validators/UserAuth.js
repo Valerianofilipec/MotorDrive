@@ -32,6 +32,7 @@ module.exports = {
             });     
             
             req.token = token;
+            req.userId = user.id;
             return res.status(200).json({user:{
                 id: user.id,
                 email: user.email,

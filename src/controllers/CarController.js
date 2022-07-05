@@ -28,6 +28,7 @@ module.exports =  {
     },
 
     async index(req, res){
+        console.log(`\n\n${req.userId}\n\n`)
         const {driver_id: UserId} = req.params;
         try {
             const cars = await showAllCars({UserId});
@@ -84,6 +85,7 @@ module.exports =  {
     },
     
     async delete(req, res){
+        
         const {driver_id: UserId,car_id} = req.params;
         try {
             await deleteCar({UserId, car_id});
