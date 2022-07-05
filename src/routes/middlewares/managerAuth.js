@@ -3,7 +3,6 @@ dotenv.config();
 const {verify } = require('jsonwebtoken');
 
 const managerAuth = async (req, res, next) =>{
-/*
     const {authorization} = req.headers;
     const token = authorization && authorization.split(' ')[1];
     
@@ -15,7 +14,6 @@ const managerAuth = async (req, res, next) =>{
         next();
     } catch (error) {
         return res.status(401).json({ error: 'Token invalid' });
-    }*/
-    next();
+    }
 }
 module.exports = managerAuth;

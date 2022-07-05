@@ -1,6 +1,7 @@
 require('dotenv/config');
 const {hash} = require('bcrypt');
 const {User} = require('../../models');
+const AppError = require('../errors/AppError');
 
 module.exports = {
     async createManager({name,email,password}){
@@ -14,7 +15,7 @@ module.exports = {
             });
             return manager;
         } catch (error) {
-         throw error;
+         throw AppError(error.message,500);
         }
      },
 }

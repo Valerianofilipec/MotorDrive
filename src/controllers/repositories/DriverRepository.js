@@ -1,7 +1,7 @@
 require ("dotenv/config"); 
 const {hash} = require("bcrypt");
 const AppError = require("../errors/AppError");
-const {Car, User, DriverInfo, Geolocation} = require("../models");
+const {Car, User, DriverInfo, Geolocation} = require("../../models");
 
 const saltRounds = process.env.BCRYPT_SALT;
 
@@ -65,17 +65,46 @@ module.exports = {
             }
             
             } catch (error) {
-                throw new AppError(error.message, 500);
+                if(error instanceof AppError ){
+                    throw error;
+                } else{
+                    throw new AppError(error.message, 500);
+                }
             }
     },
 
+    //list all drivers
+    async listAllDrivers(){
+        try {
+            const drivers = await User.findAll({
+                where:{
+                    userType:'driver'
+                },
+                attributes:['name'],
+                include:[
+                    {
+                        model:DriverInfo, 
+                        attributes:['home_location']
+                    },
+                    {
+                        model:Car,
+                        attributes:['plate_number']
+                    }
+                ] 
+            });
+            return drivers;
+        } catch (error) {
+            throw new AppError(error.message,500);
+        }
+    },
+
     //update driver (except cars associations) 
-    async updateDriver(req, res){
-        const {password, home_location, ...others} = req.body;
-        const {driver_id} = req.params;
+    async updateDriver(obj, params){
+        const {password, home_location, ...others} = obj;
+        const {driver_id} = params;
         const driver = await User.findByPk(driver_id);
         if(!driver || driver.userType == 'manager'){
-            return res.status(404).json({error: 'DriverInfo not found'});
+            throw AppError('DriverInfo not found',404);
         }
 
         const passwordHash = password && await hash(password, 10);
@@ -99,26 +128,33 @@ module.exports = {
                 await DriverInfo.update({home_location},{where: {UserId: driver_id}});
             }
 
-            return res.status(200).json(driverUpdated);
+            return driverUpdated;
 
         } catch (error) {
-            return res.status(500).json({error: 'Error updating driver'});
+            if(error instanceof AppError ){
+                throw error;
+            } else{
+                throw AppError('Error updating driver',500);
+            }
         }
         
     },
 
-    async deleteDriver(req, res){
-        const {driver_id} = req.params;
-        const driver = await User.findByPk(driver_id);
-
-        if(!driver || driver.userType == 'manager'){
-            return res.status(404).json({error: 'DriverInfo not found'});
-        }
+    async deleteDriver(params){
+        const {driver_id} = params;
         try {
+            const driver = await User.findByPk(driver_id);
+            if(!driver || driver.userType == 'manager'){
+                throw AppError('DriverInfo not found',404);
+            }
             await driver.destroy();
-            return res.status(200).json({message: 'Driver deleted'});
+            return;
         } catch (error) {
-            return res.status(500).json({error: 'Error deleting driver'});
+            if(error instanceof AppError ){
+                throw error;
+            } else{
+                throw AppError('Error deleting driver',500);
+            }
         }
     },
 }

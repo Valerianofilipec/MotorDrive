@@ -4,8 +4,15 @@ const AppError = require('../errors/AppError');
 
 module.exports = {
     //create a new car with(out) the UserId
-    async createCar({brand, model, plate_number, geolocation}, UserId){
+    async createCar(obj, params){
         try {
+            const {
+                brand,
+                model, 
+                plate_number,
+                geolocation, //:{longitude, latitude}
+            } = obj;
+            const {UserId} = params;
             const car = await Car.create({
                 brand,
                 model,
@@ -18,20 +25,34 @@ module.exports = {
             
             return car;
         } catch (error) {
+            if(error instanceof AppError ){
+                throw error;
+            } else{
             throw new AppError(error.message, 500);
+            }
         }
     },
 
-    async updateCar(UserId=undefined,car_id, obj){
+    async updateCar(obj, params){
         try {
+            const {UserId, car_id} = params;
             const {geolocation,...others} = obj;
-            const car = await Car.findByPk(car_id,{include:[Geolocation]});
-    
+            const car = await Car.findByPk(car_id,{
+                include:{
+                    model:Geolocation,
+                    attributes:['longitude','latitude']
+                }
+            });
+
             if(!car){
                 throw new AppError('Car not found',404);
             }
+            if(UserId){//if the UserId is passed, check if it's the same driver
+                if(car.UserId != UserId){
+                    throw new AppError('Driver not authorized',400);
+                }
+            }
 
-            
             if(geolocation){
                 await Geolocation.update(geolocation,{
                     where:{CarId: car_id}
@@ -44,28 +65,36 @@ module.exports = {
             });
            return;
         } catch (error) {
-            throw new AppError('Error updating car',500);
+            if(error instanceof AppError ){
+                throw error;
+            } else{
+                throw new AppError('Error updating car',500);
+            }
         }
 
     },
 
-    async deleteCar(UserId, car_id){
-        
-        const car = await Car.findByPk(car_id);
-
-        if(!car){
-            return res.status(404).json({error: 'Car not found'});
-        }
-        if(UserId){//if the UserId is passed, check if it's the same driver
-            if(car.UserId != UserId){
-                throw new AppError('Driver not authorized',400);
-            }
-        }
+    async deleteCar(params){
         try {
+            const {UserId, car_id} = params;
+            const car = await Car.findByPk(car_id);
+    
+            if(!car){
+                return res.status(404).json({error: 'Car not found'});
+            }
+            if(UserId){//if the UserId is passed, check if it's the same driver
+                if(car.UserId != UserId){
+                    throw new AppError('Driver not authorized',400);
+                }
+            }
             await car.destroy();
             return;
         } catch (error) {
-           throw new AppError('Error deleting car',500);
+            if(error instanceof AppError ){
+                throw error;
+            } else{
+                throw new AppError('Error deleting car',500);
+            }
         }
 
     },
@@ -80,7 +109,11 @@ module.exports = {
             });
             return cars;
         } catch (error) {
-            throw new AppError('Error getting cars',500);
+            if(error instanceof AppError ){
+                throw error;
+            } else{
+                throw new AppError('Error getting cars',500);
+            }
         }
     },
 
@@ -121,20 +154,30 @@ module.exports = {
         }
     },
 
-    async showAllCars(UserId=undefined){
+    async showAllCars(params){
         try {
+            const {UserId} = params;
             let cars;
             if(UserId){
                 cars = await Car.findAll({
                     where: {
                         UserId
                     },
-                    include: Geolocation
+                    attributes:['model','brand','plate_number'],
+                    include: {
+                        model:Geolocation,
+                        attributes:['longitude', 'latitude']
+                    }
                 });
             } else {
-                cars = await Car.findAll({include:Geolocation});
+                cars = await Car.findAll({
+                    include: {
+                        model:Geolocation,
+                        attributes:['longitude', 'latitude']
+                    }
+                });
             }
-           return cars;;
+           return cars;
         } catch (error) {
             throw new AppError('Error getting cars',500);
         }

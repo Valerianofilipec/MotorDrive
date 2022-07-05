@@ -1,4 +1,4 @@
-const { createDriver } = require('./repositories/DriverRepository.js');
+const { createDriver, listAllDrivers, updateDriver, deleteDriver } = require('./repositories/DriverRepository.js');
 
 module.exports = {
     //CRUD
@@ -12,12 +12,35 @@ module.exports = {
             return res.status(error.statusCode).json(error.message);
         }
     },
-
+    
     async index(req, res){
-
+        try {
+            const drivers = await listAllDrivers();
+            return res.status(200).json(drivers);
+        } catch (error) {
+            return res.status(error.statusCode).json(error.message);
+        }
     },
 
-    async update(req, res){},
+    async update(req, res){
+        const {password, home_location, ...others} = req.body;
+        const {driver_id} = req.params;
 
-    async delete(req, res){},
+        try {
+            const driver = await updateDriver({password, home_location, ...others},{driver_id});
+            return res.status(200).json(driver);
+        } catch (error) {
+            return res.status(error.statusCode).json(error.message);
+        }
+    },
+    
+    async delete(req, res){
+        const {driver_id} = req.params;
+        try {
+            await deleteDriver({driver_id});
+            return res.status(200).json({message: 'Driver deleted'});
+        } catch (error) {
+            return res.status(error.statusCode).json(error.message);
+        }
+    },
 }

@@ -3,7 +3,6 @@ const ManagerController = require('../controllers/ManagerController');
 const managerAuth = require('./middlewares/managerAuth.js');
 
 
-//managerRouter.post('/',managerAuth, ManagerController.create);
-managerRouter.post('/', ManagerController.create);//delete!
+managerRouter.post('/',managerAuth, ManagerController.create);
 
 module.exports = managerRouter;

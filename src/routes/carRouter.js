@@ -2,7 +2,7 @@ const carRouter = require('express').Router();
 const CarController = require('../controllers/CarController.js');
 const managerAuth = require('./middlewares/managerAuth.js');
 
-//carRouter.use(managerAuth);
+carRouter.use(managerAuth);
 
 //create car (by driver & car IDs)
 carRouter.post('/', CarController.create);

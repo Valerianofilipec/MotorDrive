@@ -7,7 +7,7 @@ module.exports = {
             const manager = await createManager({name, email,password});
             return res.status(201).json(manager);
         } catch (error) {
-            return res.status(500).json(error.message);
+            return res.status(error.statusCode).json(error.message);
         }
     }
 }
