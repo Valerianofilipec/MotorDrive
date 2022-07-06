@@ -1,7 +1,7 @@
 const driverRouter = require('express').Router();
 const DriverController = require('../controllers/DriverController.js');
 const CarController = require('../controllers/CarController.js');
-const {driverIDvalidation} = require('../controllers/validators/driverValidator.js');
+const {driverIDvalidation} = require('./middlewares/driverValidator.js');
 
 const managerAuth = require('./middlewares/managerAuth.js');
 

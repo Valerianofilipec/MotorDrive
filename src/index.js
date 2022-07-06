@@ -15,3 +15,5 @@ app.use(routes);
 app.listen(port,async()=>{
     console.log(`MotorDrive's Server running!  ${port}`);
 });
+
+module.exports = app;

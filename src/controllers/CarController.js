@@ -28,7 +28,6 @@ module.exports =  {
     },
 
     async index(req, res){
-        console.log(`\n\n${req.userId}\n\n`)
         const {driver_id: UserId} = req.params;
         try {
             const cars = await showAllCars({UserId});

@@ -1,4 +1,4 @@
-const AppError = require("../errors/AppError");
+const AppError = require("../../controllers/errors/AppError");
 const {verify} = require('jsonwebtoken');
 
 module.exports = {

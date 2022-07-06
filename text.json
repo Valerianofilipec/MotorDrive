@@ -75,23 +75,13 @@ https://medium.com/swlh/basic-login-system-with-node-js-99acf02275b9
 
 https://medium.com/@codingnotes/how-to-create-instances-with-associations-in-sequelize-6664cb9fb984
 
+//JEST UNIT TESTING
+https://www.freecodecamp.org/news/how-to-start-unit-testing-javascript/
 
-SET @user_location = ST_GeomFromText( 'POINT(0 0)' );
-SELECT 
-    *,
-    ST_AsText(`position`) AS `pos_wkt`,
-    ST_Distance(`position`, @user_location) AS `distance`
-FROM
-    `locations_flat`
-WHERE ST_Distance(`position`, @user_location) <= 100;
+https://dev.to/dstrekelj/how-to-write-unit-tests-in-javascript-with-jest-2e83
 
-//Or
+https://jestjs.io/docs/es6-class-mocks
 
-SET @user_location = ST_GeomFromText( 'POINT(30 50)', 4326 );
-SELECT 
-    *,
-    ST_AsText(`position`) AS `pos_wkt`,
-    ST_Distance_Sphere(`position`, @user_location) AS `distance`
-FROM
-    `locations_earth`
-WHERE ST_Distance_Sphere(`position`, @user_location) <= (1000*1000);
+https://dev.to/mhmdlotfy96/testing-nodejs-express-api-with-jest-and-supertest-1bk0
+
+https://www.geeksforgeeks.org/unit-testing-software-testing/
