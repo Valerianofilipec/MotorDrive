@@ -1,22 +1,27 @@
 const CarRepository = require('../src/controllers/repositories/CarRepository');
-
+var car;
 describe("Car", ()=>{
     it("should creater car with: brand, model, plate number and geolocation(optional)",async ()=>{
-        const newCar = await CarRepository.createCar(
+        car = await CarRepository.createCar(
             {
                 brand: "Toyota",
                 model:"Yaris",
                 plate_number:"JEST-001"
             },{}
         );
-        expect(newCar.brand).toBe("Toyota");
-        expect(newCar.model).toBe("Yaris");
-        expect(newCar.plate_number).toBe("JEST-001");
-        //expect(newCar.UserId).toBe(null);
+        expect(car.brand).toBe("Toyota");
+        expect(car.model).toBe("Yaris");
+        expect(car.plate_number).toBe("JEST-001");
+        //expect(car.UserId).toBe(null);
+    });
+
+    it("should delete a car", async ()=>{
+        let carDeleted = await CarRepository.deleteCar({car_id: car.id, UserId:car.UserId});
+        expect(carDeleted).toBeUndefined();
     });
 
     it("should create car with geolocation",async ()=>{
-        const newCar = await CarRepository.createCar(
+        car = await CarRepository.createCar(
             {
                 brand: "Toyota",
                 model:"Yaris",
@@ -27,11 +32,11 @@ describe("Car", ()=>{
                 }
             },{}
         );
-        expect(newCar.brand).toBe("Toyota");
-        expect(newCar.model).toBe("Yaris");
-        expect(newCar.plate_number).toBe("JEST-002");
-        expect(newCar.Geolocation.longitude).toBe(-0.1278);
-        expect(newCar.Geolocation.latitude).toBe(51.5287);
+        expect(car.brand).toBe("Toyota");
+        expect(car.model).toBe("Yaris");
+        expect(car.plate_number).toBe("JEST-002");
+        expect(car.Geolocation.longitude).toBe(-0.1278);
+        expect(car.Geolocation.latitude).toBe(51.5287);
     });
 
     it("should view the current geographical location of each car",async ()=>{
@@ -48,4 +53,9 @@ describe("Car", ()=>{
         const cars = await CarRepository.showCarsByProximity(-0.1278,51.5287,100);
         expect(cars).toBeDefined();
     });
+
+    //Clean up
+    it('cleanUp',async()=>{
+        await CarRepository.deleteCar({car_id: car.id});
+    })
 });

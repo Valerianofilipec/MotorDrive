@@ -104,7 +104,7 @@ module.exports = {
         const {driver_id} = params;
         const driver = await User.findByPk(driver_id);
         if(!driver || driver.userType == 'manager'){
-            throw AppError('DriverInfo not found',404);
+            throw new AppError('DriverInfo not found',404);
         }
 
         const passwordHash = password && await hash(password, 10);
@@ -134,7 +134,7 @@ module.exports = {
             if(error instanceof AppError ){
                 throw error;
             } else{
-                throw AppError('Error updating driver',500);
+                throw new AppError('Error updating driver',500);
             }
         }
         
@@ -145,7 +145,7 @@ module.exports = {
         try {
             const driver = await User.findByPk(driver_id);
             if(!driver || driver.userType == 'manager'){
-                throw AppError('DriverInfo not found',404);
+                throw new AppError('DriverInfo not found',404);
             }
             await driver.destroy();
             return;
@@ -153,7 +153,7 @@ module.exports = {
             if(error instanceof AppError ){
                 throw error;
             } else{
-                throw AppError('Error deleting driver',500);
+                throw new AppError('Error deleting driver',500);
             }
         }
     },
