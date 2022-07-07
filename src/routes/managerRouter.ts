@@ -5,4 +5,4 @@ const managerAuth = require('./middlewares/managerAuth.js');
 
 managerRouter.post('/',managerAuth, ManagerController.create);
 
-module.exports = managerRouter;
+export {managerRouter};

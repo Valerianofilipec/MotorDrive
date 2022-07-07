@@ -11,4 +11,4 @@ routes.use("/drivers", driverRouter);
 routes.use("/cars", carRouter);
 routes.use('/managers', managerRouter);
 
-module.exports = routes;
+export {routes};

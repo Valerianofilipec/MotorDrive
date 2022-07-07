@@ -16,4 +16,4 @@ const managerAuth = async (req, res, next) =>{
         return res.status(401).json({ error: 'Token invalid' });
     }
 }
-module.exports = managerAuth;
+export {managerAuth};

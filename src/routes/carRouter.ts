@@ -25,4 +25,4 @@ carRouter.put('/:car_id', CarController.update);
 //delete car (by ID)
 carRouter.delete('/:car_id', CarController.delete);
 
-module.exports = carRouter;
+export {carRouter};
