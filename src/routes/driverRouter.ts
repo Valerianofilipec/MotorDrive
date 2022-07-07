@@ -28,4 +28,4 @@ driverRouter.put("/:driver_id/cars/:car_id",driverIDvalidation, CarController.up
 //delete a Driver's car
 driverRouter.delete("/:driver_id/cars/:car_id",driverIDvalidation, CarController.delete);
 
-module.exports = driverRouter;
+export {driverRouter};
