@@ -1,6 +1,5 @@
-const dotenv = require("dotenv");
-dotenv.config();
-const {verify } = require('jsonwebtoken');
+import  "dotenv/config";
+import { verify } from 'jsonwebtoken';
 
 const ensureAuth = async (req, res, next) =>{
     const {authorization} = req.headers;
@@ -20,4 +19,5 @@ const ensureAuth = async (req, res, next) =>{
         return res.status(401).json({ error: 'Token invalid' });
     }
 }
-module.exports = ensureAuth;
+
+export {ensureAuth};

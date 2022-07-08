@@ -1,9 +1,10 @@
 require('dotenv/config');
-const {hash} = require('bcrypt');
-const {User} = require('../../models');
-const AppError = require('../errors/AppError');
+import { hash } from 'bcrypt';
+import { User } from '../../models/User';
+import AppError from '../errors/AppError';
 
-module.exports = {
+
+export default {
     async createManager({name,email,password}){
         const passwordHash = await hash(password, 10);
         try{

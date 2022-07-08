@@ -1,4 +1,4 @@
-require("dotenv/config");
+import "dotenv/config";
 
 //env variables
 const dbDialect = process.env.DB_DIALECT

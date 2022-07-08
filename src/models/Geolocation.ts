@@ -43,6 +43,6 @@ const Geolocation = sequelize.define('Geolocation',{
     freezeTableName: true
 });
 
-Geolocation.belongsTo(Car,{foreingKey:'CarId'});
+Geolocation.belongsTo(Car,{foreignKey:'CarId'});
 
 export default Geolocation;
