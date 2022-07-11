@@ -1,21 +1,20 @@
-const routes = require('express').Router();
-/*
-import {managerRouter} from './managerRouter';
-import {carRouter} from './carRouter';
-import {driverRouter} from './driverRouter';
-import {authenticateRouter} from './authenticateRouter';
-import {ensureAuth} from './middlewares/ensureAuth';
+import {Router} from 'express';
+import { DriverInfo, User, sequelize } from '../models/index';
+const routes = Router();
 
-routes.use(authenticateRouter ); //login
-routes.use(ensureAuth); // ensure loged user token
-routes.use("/drivers", driverRouter);
-routes.use("/cars", carRouter);
-routes.use('/managers', managerRouter);
-*/
 
-routes.use('/', ()=>{
-    console.log('Refactoring w/ sequelize-typescript using decorators');
-    return ;
+routes.post('/drivers', async (req, res)=>{
+    console.log(`creating new manager (testing the User model)`);
+
+    const {name, email, password, home_location} = req.body;
+    try {
+        const user = await DriverInfo.create({home_location, User:{name, email, password}}, {
+            include: User
+        });
+        return res.status(201).json(user);
+    } catch (error: any) {
+        return res.status(500).json(error.message);
+    }
 });
 
 export {routes};

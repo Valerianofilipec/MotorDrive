@@ -1,6 +1,8 @@
+export  class AppError {
+    message: string;
+    statusCode: number;
 
-module.exports = class AppError {
-    constructor(message, statusCode = 400) {
+    constructor(message: string, statusCode = 400) {
       this.message = message;
       this.statusCode = statusCode;
     };

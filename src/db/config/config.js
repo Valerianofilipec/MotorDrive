@@ -1,7 +1,7 @@
-import "dotenv/config";
+require("dotenv/config");
 
 //env variables
-const dbDialect = process.env.DB_DIALECT
+const dbDialect = process.env.DB_DIALECT;
 const dbName = process.env.DB_NAME ;
 const dbHost  = process.env.DB_HOST ;
 const dbPort = process.env.DB_PORT ;

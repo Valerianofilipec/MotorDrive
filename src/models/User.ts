@@ -1,32 +1,33 @@
-module.exports = (sequelize, DataTypes) => {
-    const User = sequelize.define('User',{
-        name: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        email: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            unique: true
-        },
-        password: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        userType:{
-            type: DataTypes.ENUM("driver", "manager"),
-            defaultValue: "driver",
-        },
-    },{
-        timestamps:true,
-        freezeTableName: true,
-    }
-    );
+import {Table, Column, Model, DataType, HasOne, HasMany} from 'sequelize-typescript';
+import {DriverInfo} from './DriverInfo';
+import {Car} from './Car';
 
-    User.associate = (models) => {
-        User.hasOne(models.DriverInfo,{foreingKey:'UserId'});
-        User.hasMany(models.Car,{foreingKey:'UserId'})
-      }
+@Table({
+    tableName: 'User',
+    timestamps: true,
+    freezeTableName: true,
+})
+export class User extends Model{
+    @Column({type: DataType.NUMBER ,primaryKey: true, autoIncrement: true})
+    id!: number;
 
-    return User;
+    @Column({type: DataType.STRING, allowNull: true})
+    name:string;
+
+    @Column({type: DataType.STRING, allowNull: false, unique: true})
+    email:string;
+
+    @Column({type: DataType.STRING, allowNull: false})
+    password:string;
+
+    @Column({type: DataType.ENUM("driver", "manager"), defaultValue: "driver"})
+    userType:string;
+
+    @HasOne(()=>DriverInfo, 'UserId')
+    DriverInfo: DriverInfo;
+
+    @HasMany(()=>Car, 'UserId')
+    Car:Car;
 }
+
+

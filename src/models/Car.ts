@@ -1,55 +1,31 @@
-import {DataTypes, Model, Optional} from 'sequelize';
-import {sequelize} from './';
-import Geolocation from './Geolocation';
+import {Table, Column, Model, DataType, BelongsTo, ForeignKey} from 'sequelize-typescript';
+import { User } from './User';
 
-interface CarAttributes {
-  brand: string;
-  model: string;
-  plate_number: string;
-  UserId: number;
-};
+@Table({
+    tableName: 'Car',
+    timestamps: true,
+    freezeTableName: true,
+})
+export class Car extends Model{
+    @Column({type: DataType.STRING, allowNull: true})
+    brand:string;
 
-interface CarCreationAttributes extends Optional<CarAttributes,'UserId'> {};
+    @Column({type: DataType.STRING, allowNull:false})
+    model:string;
 
-interface CarInstance extends Model<CarAttributes, CarCreationAttributes>, CarAttributes {
-    id?: number;
-    createdAt?: Date;
-    updatedAt?: Date;
+    @Column({type: DataType.STRING, allowNull: false, unique: true})
+    plate_number:string;
+
+    @ForeignKey(()=>User)
+    @Column
+    UserId:number;
+
+    @Column({type: DataType.DECIMAL, defaultValue:41.1663061, allowNull: false})
+    longitude:number;
+
+    @Column({type: DataType.DECIMAL, defaultValue:-8.6490692, allowNull: false})
+    latitude:number;
+
+    @BelongsTo(()=>User, 'UserId')
+    User:User;
 }
-
-const Car = sequelize.define<CarInstance>(
-  'Car',
-  {
-    brand: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    model: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    plate_number: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
-    },
-    UserId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-          model: 'User',
-          key: 'id',
-      },
-      onDelete: 'SET NULL',
-      onUpdate: 'CASCADE'
-    }
-  },{
-    timestamps: false,
-    freezeTableName: true
-}
-);
-
-Car.hasOne(Geolocation,{foreignKey:'CarId'});
-Car.belongsTo(User,{foreignKey:'UserId'});
-
-export default Car;

@@ -13,12 +13,9 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date()
      }], {});
-
   },
 
   async down (queryInterface, Sequelize) {
-  
     await queryInterface.bulkDelete('User',{where: {email: 'vfc@gmail.com'}});
-     
   }
 };
