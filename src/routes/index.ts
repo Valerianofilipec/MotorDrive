@@ -15,6 +15,7 @@ routes.use('/managers', managerRouter);
 
 routes.use('/', ()=>{
     console.log('Refactoring w/ sequelize-typescript using decorators');
+    return ;
 });
 
 export {routes};
