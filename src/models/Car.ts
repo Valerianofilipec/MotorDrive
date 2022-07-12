@@ -17,7 +17,7 @@ export class Car extends Model{
     plate_number:string;
 
     @ForeignKey(()=>User)
-    @Column
+    @Column(DataType.INTEGER)
     UserId:number;
 
     @Column({type: DataType.DECIMAL, defaultValue:41.1663061, allowNull: false})

@@ -1,20 +1,14 @@
 import {Router} from 'express';
-import { DriverInfo, User, sequelize } from '../models/index';
+//import { authenticateRouter } from './authenticateRouter';
+import { carRouter } from './carRouter';
+import { driverRouter } from './driverRouter';
+import { managerRouter } from './managerRouter';
+
 const routes = Router();
 
-
-routes.post('/drivers', async (req, res)=>{
-    console.log(`creating new manager (testing the User model)`);
-
-    const {name, email, password, home_location} = req.body;
-    try {
-        const user = await DriverInfo.create({home_location, User:{name, email, password}}, {
-            include: User
-        });
-        return res.status(201).json(user);
-    } catch (error: any) {
-        return res.status(500).json(error.message);
-    }
-});
+//routes.use(authenticateRouter);
+routes.use('/manager', managerRouter);
+routes.use('/drivers', driverRouter);
+routes.use('/cars', carRouter);
 
 export {routes};
