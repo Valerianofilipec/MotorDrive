@@ -1,12 +1,13 @@
 import {Table, Column, Model, DataType, BelongsTo, ForeignKey} from 'sequelize-typescript';
 import { User } from './User';
+import { ICreateCarDTO } from '../controllers/repositories/Car/ICarRepository';
 
 @Table({
     tableName: 'Car',
     timestamps: true,
     freezeTableName: true,
 })
-export class Car extends Model{
+export class Car extends Model<ICreateCarDTO>{
     @Column({type: DataType.STRING, allowNull: true})
     brand:string;
 

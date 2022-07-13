@@ -16,6 +16,7 @@ const UserModel = sequelize.model('User');
 const DriverInfoModel = sequelize.model('DriverInfo');
 const CarModel = sequelize.model('Car');
 
+
 export {
     sequelize, 
     UserModel as User,
