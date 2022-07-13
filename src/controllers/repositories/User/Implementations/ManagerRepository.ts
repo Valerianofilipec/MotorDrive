@@ -1,7 +1,7 @@
-import { User } from "../../../../models/index";
 import { AppError } from "../../../errors/AppError";
 import { hash } from 'bcrypt';
 import { IManagerRepository, ICreateManagerDTO } from "../IManagerRepository";
+import { User } from "../../../../models/User";
 
 class ManagerRepository implements IManagerRepository{
     async create({ name, email, password }: ICreateManagerDTO): Promise<any> {

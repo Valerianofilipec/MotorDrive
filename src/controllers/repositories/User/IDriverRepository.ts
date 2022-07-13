@@ -7,7 +7,7 @@ interface ICreateDriverDTO{
     email:string;
     home_location:string;
     password:string;
-    cars: number[] | ICreateCarDTO;
+    cars: number[] | ICreateCarDTO[];
 };
 
 interface IUpdateDriverDTO{
@@ -25,15 +25,15 @@ interface IDriverRepository {
             password, 
             cars
         }: ICreateDriverDTO
-    ) : Promise<User> | AppError;
+    ) : Promise<User>;
     
-    list() : Promise<User[]> | AppError;
+    list() : Promise<User[]> ;
         
     update(
         {name, email, home_location, password}: IUpdateDriverDTO, driver_id:number
-        ) : Promise<User> | AppError;
+        ) : Promise<User> ;
 
-    delete(driver_id:number) : Promise<void> | AppError;
+    delete(driver_id:number) : Promise<void> ;
 }
 
 export {IDriverRepository, ICreateDriverDTO, IUpdateDriverDTO};
