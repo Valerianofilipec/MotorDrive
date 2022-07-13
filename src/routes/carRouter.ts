@@ -1,12 +1,11 @@
 import { Router } from 'express';
-import CarController from '../controllers/CarController';/*
-import managerAuth from './middlewares/managerAuth.js';
-*/
-import {Car} from '../models/index';
+import CarController from '../controllers/CarController';
+import {managerAuth} from './middlewares/managerAuth';
+
 
 const carRouter = Router();
 
-//carRouter.use(managerAuth);
+carRouter.use(managerAuth);
 
 //create car (by driver & car IDs)
 carRouter.post('/', CarController.create);

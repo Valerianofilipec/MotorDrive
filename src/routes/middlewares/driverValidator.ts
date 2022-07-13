@@ -2,9 +2,9 @@ import { AppError } from '../../controllers/errors/AppError';
 import { verify } from 'jsonwebtoken';
 import { NextFunction, Request, Response } from "express";
 
-export default {
+
     //check the driver Id from the token
-    async driverIDvalidation(req:Request, res:Response, next: NextFunction){
+    export const driverIDvalidation = async (req:Request, res:Response, next: NextFunction)=>{
         const {authorization} = req.headers;
         const {driver_id: UserId} = req.params;
         // const token = authorization && authorization.split(' ')[1];
@@ -15,7 +15,7 @@ export default {
         try {
             //destructuring the token (before the "Bearer ")
             const [, token] = authorization.split(' ');
-            const decoded =  verify(token,process.env.JWT_SECRET);
+            const decoded:any =  verify(token,process.env.JWT_SECRET);
             if(UserId == decoded.user.id || decoded.user.userType == 'manager'){
                 next();
             }else{
@@ -29,4 +29,3 @@ export default {
             }
         }
     }
-}

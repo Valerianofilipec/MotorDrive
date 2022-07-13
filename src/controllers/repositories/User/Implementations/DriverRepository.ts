@@ -1,7 +1,7 @@
 import { Car } from "../../../../models/Car";
 import { User } from "../../../../models/User";
 import { DriverInfo } from "../../../../models/DriverInfo";
-import { CarModel, UserModel, DriverInfoModel } from "../../../../models";
+import { UserModel, DriverInfoModel } from "../../../../models";
 import { AppError } from "../../../errors/AppError";
 import { IDriverRepository, ICreateDriverDTO, IUpdateDriverDTO } from "../IDriverRepository";
 import {hash} from 'bcrypt';

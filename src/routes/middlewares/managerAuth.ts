@@ -7,9 +7,10 @@ const managerAuth = async (req: Request, res: Response, next: NextFunction) =>{
     const token = authorization && authorization.split(' ')[1];
     
     try {
-        const decoded =  verify(token,process.env.JWT_SECRET);
+        const decoded: any =  verify(token,process.env.JWT_SECRET);
         if(decoded.user.userType != 'manager'){
-            return res.status(403).json({error: 'Nope! not authorized'});
+            return res.status(403).json(decoded.user);
+            //return res.status(403).json({error: 'Nope! not authorized'});
         }
         next();
     } catch (error) {

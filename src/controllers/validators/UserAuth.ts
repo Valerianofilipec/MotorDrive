@@ -2,7 +2,7 @@ import dotenv from "dotenv/config";
 import { Request, Response } from "express";
 import { compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
-import { User } from '../../models/index';
+import { User } from '../../models/User';
 
 interface IUserDTO {
     id:number;
