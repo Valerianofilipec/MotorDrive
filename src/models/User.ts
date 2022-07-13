@@ -1,35 +1,49 @@
-import {Table, Column, Model, DataType, HasOne, HasMany} from 'sequelize-typescript';
+import {DataTypes, Model, Optional} from 'sequelize';
 import {DriverInfo} from './DriverInfo';
 import {Car} from './Car';
+import {sequelize} from '.'
+
+export interface UserAttributes {
+  name:string;
+  email:string;
+  password:string;
+  userType?:string;
+};
 
 
-@Table({
-    tableName: 'User',
-    timestamps: true,
-    freezeTableName: true,
-})
+interface UserCreationAttributes extends Optional<UserAttributes,'userType'> {};
 
-export class User extends Model{
-    @Column({type: DataType.NUMBER ,primaryKey: true, autoIncrement: true})
-    id!: number;
-
-    @Column({type: DataType.STRING, allowNull: true})
-    name:string;
-
-    @Column({type: DataType.STRING, allowNull: false, unique: true})
-    email:string;
-
-    @Column({type: DataType.STRING, allowNull: false})
-    password:string;
-
-    @Column({type: DataType.ENUM("driver", "manager"), defaultValue: "driver"})
-    userType:string;
-
-    @HasOne(()=>DriverInfo, 'UserId')
-    DriverInfo: DriverInfo;
-
-    @HasMany(()=>Car, 'UserId')
-    Car:Car;
+interface UserInstance extends Model<UserAttributes, UserCreationAttributes>, UserAttributes {
+    id?: number;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
+const User = sequelize.define<UserInstance>('User',{
+    name: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    userType:{
+        type: DataTypes.ENUM("driver", "manager"),
+        defaultValue: "driver",
+    },
+},{
+    timestamps:true,
+    freezeTableName: true,
+});
 
+User.hasOne(DriverInfo,{foreignKey:'UserId'});
+User.hasMany(Car,{foreignKey:'UserId'});
+
+
+export {User};
