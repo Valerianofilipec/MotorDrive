@@ -103,7 +103,7 @@ export default {
                 plate_number,
                 longitude,
                 latitude
-            },{UserId, car_id});
+            },Number(car_id), Number(UserId));
             return res.sendStatus(200);
         } catch (error) {
              if(error instanceof AppError){

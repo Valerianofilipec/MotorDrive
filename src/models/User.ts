@@ -2,6 +2,13 @@ import {Table, Column, Model, DataType, HasOne, HasMany} from 'sequelize-typescr
 import {DriverInfo} from './DriverInfo';
 import {Car} from './Car';
 
+export interface UserAttributes{
+    id?:number;
+    name:string;
+    email:string;
+    password:string;
+    userType:string;
+}
 
 @Table({
     tableName: 'User',
@@ -9,7 +16,7 @@ import {Car} from './Car';
     freezeTableName: true,
 })
 
-export class User extends Model{
+export class User extends Model<UserAttributes>{
     @Column({type: DataType.NUMBER ,primaryKey: true, autoIncrement: true})
     id!: number;
 

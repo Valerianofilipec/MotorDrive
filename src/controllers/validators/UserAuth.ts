@@ -2,22 +2,15 @@ import dotenv from "dotenv/config";
 import { Request, Response } from "express";
 import { compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
-import { User } from '../../models/User';
+import { User} from '../../models/User';
 
-interface IUserDTO {
-    id:number;
-    name:string;
-    email:string;
-    password:string;
-    userType:string;
-}
 
 export default {
     async login(req: Request, res: Response){
         const {email, password} = req.body;
 
         //check if user with email exists (! refatorar esta palhaçada, pois está fazendo duas buscas em tabelas diferentes)
-        const user : IUserDTO = await User.findOne({where: {email}, attributes: ['id', 'name', 'email', 'password']});
+        const user: User = await User.findOne({where: {email}, attributes: ['id', 'name', 'email','password', 'userType']});
         if(!user){
             return res.status(404).json({error: 'User not found'});
         }
