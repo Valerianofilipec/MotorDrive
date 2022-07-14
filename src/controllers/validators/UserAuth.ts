@@ -29,7 +29,12 @@ export default {
                 userType: user.userType
             }},"4602bcc8edfaf52d4bf84330f90e6e1d", {
                 expiresIn: '1h',
-            });     
+            }); 
+            
+            //save the user token (w/ not crucial info) to redis, to verify every hour!
+        /*
+            
+        */
             
             return res.status(200).json({user:{
                 id: user.id,

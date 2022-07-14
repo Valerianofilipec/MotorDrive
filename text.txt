@@ -60,8 +60,13 @@
 					"coordinates": [41.1663061,-8.6490692]
     }
 }
-	]
-}
+
+
+https://khalilstemmler.com/articles/typescript-domain-driven-design/repository-dto-mapper/
+
+https://www.freecodecamp.org/news/how-to-add-typescript-to-a-javascript-project/
+
+https://npmmirror.com/package/sequelize-typescript-model-migration
 
 //Find features within given coordinates and distance using MySQL
 https://www.movable-type.co.uk/scripts/latlong-db.html

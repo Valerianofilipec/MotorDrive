@@ -4,7 +4,7 @@ services:
   db:
     container_name: motordb
 
-    image: mysql
+    image: mysql:8.0
 
     command: --default-authentication-plugin=mysql_native_password
     
@@ -29,6 +29,31 @@ services:
       - db_vol:/usr/app/mysql
     #network_mode: "host"
 
+  redis:
+    container_name: motorredis
+
+    image: redis:7-alpine
+
+    restart: always
+    
+    ports:
+      - '6379:6379'
+    
+    environment:
+      - REDIS_PASSWORD=redis
+      - REDIS_DB=0
+    
+    healthcheck:
+      test: ["CMD", "redis-cli", "-h", "localhost", "-p", "6379", "ping"]
+      interval: 15s
+      timeout: 120s
+      retries: 10
+    
+    command: redis-server --save 20 1 --loglevel warning --requirepass redis
+    volumes:
+      - redis_vol:/usr/app/redis
+    #network_mode: "host"
+
   app:
     container_name: motorapp
     restart: always
@@ -41,8 +66,12 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     #entrypoint: ["/bin/bash", "-c", "npx", "run", "sequelize-cli", "db:migrate"]
     #network_mode: "host"
 
 volumes:
   db_vol:
+  redis_vol:
+    driver: local
