@@ -44,6 +44,21 @@ export default {
         } catch (error) {
             return res.status(500).json({error: 'error Generate a token'});
         }
+    },
+
+    //return number of many loged users
+    async logedUsers(req:Request, res:Response){
+        
+        try {
+            //require the token_Array (of all loged users)
+            const tokenArray : string[] = [] // from redis 
+            
+            return res.status(201).json(tokenArray.length);
+        } catch (error) {
+            return res.status(500).json({error: 'Error reading the Token_Array!'});            
+        }
+
+
     }
     
 }
