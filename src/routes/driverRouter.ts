@@ -1,26 +1,28 @@
-const driverRouter = require('express').Router();
-const DriverController = require('../controllers/DriverController.js');
-const CarController = require('../controllers/CarController.js');
-const {driverIDvalidation} = require('./middlewares/driverValidator.js');
+import { Router } from "express";
 
-const managerAuth = require('./middlewares/managerAuth.js');
+import DriverController from '../controllers/DriverController';
+import CarController from '../controllers/CarController';
+const driverRouter = Router();
+
+import { driverIDvalidation } from './middlewares/driverValidator';
+import {managerAuth} from './middlewares/managerAuth';
 
 //Only Manager Authorized!
 //create driver
 driverRouter.post("/", managerAuth, DriverController.create);
 
 //list all drivers
-driverRouter.get("/", managerAuth, DriverController.index);
+driverRouter.get("/", managerAuth, DriverController.list);
 
 //update driver (by ID)
 driverRouter.put("/:driver_id",managerAuth, DriverController.update);
 
 //delete driver (by ID)
-driverRouter.delete("/:driver_id",managerAuth, DriverController.delete);
+driverRouter.delete("/:driver_id",managerAuth,DriverController.delete);
 
 //Manager and Driver Authorized!
 //get all Driver's cars
-driverRouter.get("/:driver_id/cars",driverIDvalidation, CarController.index);
+driverRouter.get("/:driver_id/cars",driverIDvalidation, CarController.list);
 //create a new Driver's car
 driverRouter.post("/:driver_id/cars",driverIDvalidation, CarController.create);
 //update a Driver's car

@@ -1,6 +1,9 @@
-const carRouter = require('express').Router();
-const CarController = require('../controllers/CarController.js');
-const managerAuth = require('./middlewares/managerAuth.js');
+import { Router } from 'express';
+import CarController from '../controllers/CarController';
+import {managerAuth} from './middlewares/managerAuth';
+
+
+const carRouter = Router();
 
 carRouter.use(managerAuth);
 
@@ -8,16 +11,16 @@ carRouter.use(managerAuth);
 carRouter.post('/', CarController.create);
 
 // get all cars
-carRouter.get('/', CarController.index);
+carRouter.get('/', CarController.list);
 
 //get cars by brand
-carRouter.get('/brand/:brand', CarController.indexByBrand);
+carRouter.get('/brand/:brand', CarController.findAllByBrand);
 
 //get all cars geolocation
-carRouter.get('/geolocation', CarController.indexLocations);
+carRouter.get('/geolocation', CarController.findAllLocations);
 
 //get cars by proximity(longitude, latitude, radius_km)
-carRouter.get('/proximity?', CarController.indexByProximity);
+carRouter.get('/proximity?', CarController.findAllByProximity);
 
 //update car (by driver & car IDs)
 carRouter.put('/:car_id', CarController.update);

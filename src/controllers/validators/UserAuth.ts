@@ -1,16 +1,16 @@
-const dotenv = require("dotenv");
-dotenv.config();
-const {compare} = require('bcrypt');
-const {sign} = require('jsonwebtoken');
-const {User} = require('../../models');
+import dotenv from "dotenv/config";
+import { Request, Response } from "express";
+import { compare } from 'bcrypt';
+import { sign } from 'jsonwebtoken';
+import { User} from '../../models/User';
 
 
-module.exports = {
-    async login(req, res){
+export default {
+    async login(req: Request, res: Response){
         const {email, password} = req.body;
 
         //check if user with email exists (! refatorar esta palhaçada, pois está fazendo duas buscas em tabelas diferentes)
-        let user = await User.findOne({where: {email}});
+        const user: User = await User.findOne({where: {email}, attributes: ['id', 'name', 'email','password', 'userType']});
         if(!user){
             return res.status(404).json({error: 'User not found'});
         }
@@ -31,8 +31,6 @@ module.exports = {
                 expiresIn: '1h',
             });     
             
-            req.token = token;
-            req.userId = user.id;
             return res.status(200).json({user:{
                 id: user.id,
                 email: user.email,

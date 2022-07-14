@@ -1,30 +1,21 @@
-module.exports = (sequelize, DataTypes) =>{
-  const DriverInfo = sequelize.define('DriverInfo',{
-    UserId:{
-      type: DataTypes.INTEGER,
-      foreignKey: true,
-      allowNull: false,
-      references:{
-        model:'User',
-        key:'id',
-        as:'UserId'
-      },
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE',
-    },
-    home_location:{
-      type: DataTypes.STRING,
-      allowNull: false,
-      notEmppty: true,
-    }
-  },{
+import {Table, Column, Model, DataType, ForeignKey, NotEmpty, BelongsTo} from 'sequelize-typescript';
+
+import { User } from './User';
+
+@Table({
+    tableName: 'DriverInfo',
     timestamps: false,
     freezeTableName: true,
-  });
+})
+export class DriverInfo extends Model{
+    @BelongsTo(()=>User, 'UserId')
+    User:User;
 
-  DriverInfo.associate = (models) => {
-    DriverInfo.belongsTo(models.User,{foreignKey:'UserId'});
-  }
-
-  return DriverInfo;
+    @ForeignKey(()=>User)
+    @Column({type: DataType.INTEGER, allowNull: true})
+    UserId:number;
+    
+    @NotEmpty
+    @Column({type: DataType.STRING, allowNull: false})
+    home_location:string;
 }

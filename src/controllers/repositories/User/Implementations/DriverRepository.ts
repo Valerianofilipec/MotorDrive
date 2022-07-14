@@ -1,12 +1,13 @@
-require ("dotenv/config"); 
-const {hash} = require("bcrypt");
-const AppError = require("../errors/AppError");
-const {Car, User, DriverInfo, Geolocation} = require("../../models");
+import { Car } from "../../../../models/Car";
+import { User } from "../../../../models/User";
+import { DriverInfo } from "../../../../models/DriverInfo";
+import { UserModel, DriverInfoModel } from "../../../../models";
+import { AppError } from "../../../errors/AppError";
+import { IDriverRepository, ICreateDriverDTO, IUpdateDriverDTO } from "../IDriverRepository";
+import {hash} from 'bcrypt';
 
-const saltRounds = process.env.BCRYPT_SALT;
-
-module.exports = {
-    async createDriver(obj){
+class DriverRepository implements IDriverRepository{
+    async create(/*{ name, email, home_location, password, cars }*/ obj: ICreateDriverDTO):Promise<User> {
         const {name, email, home_location, password, cars} = obj;
         let carsArray = [];
         // set the type of list cars to array
@@ -17,29 +18,14 @@ module.exports = {
         try {
             if(typeof cars[0] == 'number'){
                 for(let i = 0; i < cars.length; i++){
-                    let carObj = await Car.findByPk(cars[i],{
-                        include:[Geolocation]
-                     });
-                    if(carObj && !carObj.UserId){
+                    let carObj = await Car.findByPk(Number(cars[i]));
+                    if(carObj && !carObj.UserId){//to allow only the available one
                         carsArray.push(carObj);
                     }
                 };
             } else {
                 for(let i = 0; i < cars.length; i++){
-                    let {
-                        brand,
-                        model, 
-                        plate_number,
-                        geolocation
-                    } = cars[i];
-                    let carObj = await Car.create({
-                        brand,
-                        model,
-                        plate_number,
-                        Geolocation: {...geolocation},
-                    },{
-                        include:[Geolocation]
-                     });
+                    let carObj = await Car.create(cars[i]);
                     carsArray.push(carObj);
                 }
             }
@@ -48,18 +34,22 @@ module.exports = {
 
             if(carsArray.length != 0){
                 //create de user.driver
-                const user = await User.create({
+                let user: any = await UserModel.create({
                     name,
                     email,
                     password: passwordHash,
+                    /*DriverInfo:{
+                        home_location,
+                    }
+                },{
+                    include:[DriverInfo]*/
                 }); 
                 
                 //Gambiarra! creatre the DriverInfo after user, and then  associate them
-                const driver = await DriverInfo.create({UserId:user.id, home_location,});
-                await driver.setUser(user);
+                const driver = await DriverInfoModel.create({UserId:user.id, home_location});
+                //await driver.setUser(user);
                 await user.addCars(carsArray);
-                
-                return driver;
+                return user;
             } else {
                 throw new AppError('Invalid cars: not availables',406);
             }
@@ -71,12 +61,11 @@ module.exports = {
                     throw new AppError(error.message, 500);
                 }
             }
-    },
+    }
 
-    //list all drivers
-    async listAllDrivers(){
+    async list():Promise<User[]> {
         try {
-            const drivers = await User.findAll({
+            const drivers: any = await UserModel.findAll({
                 where:{
                     userType:'driver'
                 },
@@ -96,12 +85,10 @@ module.exports = {
         } catch (error) {
             throw new AppError(error.message,500);
         }
-    },
+    }
 
-    //update driver (except cars associations) 
-    async updateDriver(obj, params){
+    async update(/*{ name, email, home_location, password }*/obj: IUpdateDriverDTO, driver_id:number):Promise<User> {
         const {password, home_location, ...others} = obj;
-        const {driver_id} = params;
         const driver = await User.findByPk(driver_id);
         if(!driver || driver.userType == 'manager'){
             throw new AppError('DriverInfo not found',404);
@@ -110,7 +97,7 @@ module.exports = {
         const passwordHash = password && await hash(password, 10);
 
         try {
-            let driverUpdated;
+            let driverUpdated: User;
             if(password){
                 const passwordHash = await hash(password, 10);
                 driverUpdated =  Object.assign(driver, {
@@ -138,10 +125,9 @@ module.exports = {
             }
         }
         
-    },
+    }
 
-    async deleteDriver(params){
-        const {driver_id} = params;
+    async delete(driver_id: number): Promise<void> {
         try {
             const driver = await User.findByPk(driver_id);
             if(!driver || driver.userType == 'manager'){
@@ -156,5 +142,7 @@ module.exports = {
                 throw new AppError('Error deleting driver',500);
             }
         }
-    },
+    }
 }
+const obj = new DriverRepository();
+export {obj as DriverRepository};

@@ -1,6 +1,8 @@
-const authenticateRouter = require('express').Router();
-const {login} = require('../controllers/validators/UserAuth.js');
+import { Router } from 'express';
+import UserAuth from '../controllers/validators/UserAuth';
 
-authenticateRouter.post('/login', login);
+const authenticateRouter = Router();
+
+authenticateRouter.post('/login', UserAuth.login);
 
 export {authenticateRouter};

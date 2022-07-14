@@ -1,9 +1,10 @@
-const AppError = require("../../controllers/errors/AppError");
-const {verify} = require('jsonwebtoken');
+import { AppError } from '../../controllers/errors/AppError';
+import { verify } from 'jsonwebtoken';
+import { NextFunction, Request, Response } from "express";
 
-module.exports = {
+
     //check the driver Id from the token
-    async driverIDvalidation(req, res, next){
+    export const driverIDvalidation = async (req:Request, res:Response, next: NextFunction)=>{
         const {authorization} = req.headers;
         const {driver_id: UserId} = req.params;
         // const token = authorization && authorization.split(' ')[1];
@@ -14,7 +15,7 @@ module.exports = {
         try {
             //destructuring the token (before the "Bearer ")
             const [, token] = authorization.split(' ');
-            const decoded =  verify(token,process.env.JWT_SECRET);
+            const decoded:any =  verify(token,process.env.JWT_SECRET);
             if(UserId == decoded.user.id || decoded.user.userType == 'manager'){
                 next();
             }else{
@@ -28,4 +29,3 @@ module.exports = {
             }
         }
     }
-}

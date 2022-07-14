@@ -38,6 +38,16 @@ module.exports = {
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE'
       },
+      longitude:{
+        type: Sequelize.DECIMAL,
+        defaultValue:41.1663061,
+        allowNull: false
+      },
+      latitude:{
+        type: Sequelize.DECIMAL,
+        defaultValue:-8.6490692,
+        allowNull: false
+      },
       createdAt:{
           type: Sequelize.DATE,
           allowNull: false
@@ -55,7 +65,6 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-
     await queryInterface.dropTable('Car');
   }
 };

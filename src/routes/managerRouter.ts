@@ -1,7 +1,8 @@
-const managerRouter = require('express').Router();
-const ManagerController = require('../controllers/ManagerController');
-const managerAuth = require('./middlewares/managerAuth.js');
+import { Router } from 'express';
+import ManagerController from '../controllers/ManagerController';
+import {managerAuth} from './middlewares/managerAuth';
 
+const managerRouter = Router();
 
 managerRouter.post('/',managerAuth, ManagerController.create);
 

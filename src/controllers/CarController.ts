@@ -1,63 +1,74 @@
-const {
-    createCar, 
-    showAllCars, 
-    showCarsByBrand, 
-    showCarsLocations, 
-    showCarsByProximity, 
-    updateCar, 
-    deleteCar
-} = require('./repositories/CarRepository.js');
+import { Request, Response } from "express";
+import { AppError } from "./errors/AppError";
+import { CarRepository } from "./repositories/Car/Implementations/CarRepository";
 
-module.exports =  {
+export default {
     //CRUD
-    async create(req, res){
+    async create(req: Request, res: Response){
         const {driver_id :UserId} = req.params;
         const {
             brand,
             model, 
             plate_number,
-            geolocation, //:{longitude, latitude}
+            longitude, 
+            latitude
         } = req.body;
 
         try {
-            const car = await createCar({brand, model, plate_number, geolocation}, {UserId})
+            const car = await CarRepository.create({brand, model, plate_number, longitude, latitude})
             return res.status(201).json(car);
         } catch (error) {
-            return res.status(error.statusCode).json(error.message);
+             if(error instanceof AppError){
+                return res.status(error.statusCode).json(error.message);
+            } else {
+                const newError = new AppError(error.message, 500);
+            }
         }
     },
 
-    async index(req, res){
-        const {driver_id: UserId} = req.params;
+    async list(req: Request, res: Response){
+        const {driver_id} = req.params;
         try {
-            const cars = await showAllCars({UserId});
+            const cars = await CarRepository.list(parseInt(driver_id));
             return res.status(200).json(cars);
         } catch (error) {
-            return res.status(error.statusCode).json(error.message);
+             if(error instanceof AppError){
+                return res.status(error.statusCode).json(error.message);
+            } else {
+                const newError = new AppError(error.message, 500);
+            }
         }
     },
 
-    async indexByBrand(req, res){
+    async findAllByBrand(req: Request, res: Response){
         const {brand} = req.params;
 
         try {
-            const cars = await showCarsByBrand(brand);
+            const cars = await CarRepository.findAllByBrand(brand);
             return res.status(200).json(cars);
         } catch (error) {
-            return res.status(error.statusCode).json(error.message);
+             if(error instanceof AppError){
+                return res.status(error.statusCode).json(error.message);
+            } else {
+                const newError = new AppError(error.message, 500);
+            }
         }
     },
 
-    async indexLocations(req, res){
+    async findAllLocations(req: Request, res: Response){
         try {
-            const cars = await showCarsLocations();
+            const cars = await CarRepository.findAllLocations();
             return res.status(200).json(cars);
         } catch (error) {
-            return res.status(error.statusCode).json(error.message);
+             if(error instanceof AppError){
+                return res.status(error.statusCode).json(error.message);
+            } else {
+                const newError = new AppError(error.message, 500);
+            }
         }
     },
 
-    async indexByProximity(req, res){
+    async findAllByProximity(req: Request, res: Response){
         // query selection parameters: latitude, longitude & radius of bounding circle
         const {
             longitude,
@@ -65,35 +76,59 @@ module.exports =  {
             radius
         } = req.query;
         try {
-            const cars = await showCarsByProximity(longitude,latitude,radius);
+            const cars = await CarRepository.findAllByProximity(Number(longitude) ,Number(latitude), Number(radius));
             return res.status(200).json(cars);
         } catch (error) {
-            return res.status(error.statusCode).json(error.message);
+             if(error instanceof AppError){
+                return res.status(error.statusCode).json(error.message);
+            } else {
+                const newError = new AppError(error.message, 500);
+            }
         }
     },
 
-    async update(req, res){
-        const {driver_id:UserId, car_id} = req.params;
-        let {geolocation,...others} = req.body;
+    async update(req: Request, res: Response){
+        const {driver_id : UserId, car_id} = req.params;
+        let {
+            brand,
+            model,
+            plate_number,
+            longitude,
+            latitude,
+        } = req.body;
         try {
-            await updateCar({geolocation,...others},{UserId,car_id});
+            await CarRepository.update({
+                brand,
+                model,
+                plate_number,
+                longitude,
+                latitude
+            },Number(car_id), Number(UserId));
             return res.sendStatus(200);
         } catch (error) {
-            return res.status(error.statusCode).json(error.message);
+             if(error instanceof AppError){
+                return res.status(error.statusCode).json(error.message);
+            } else {
+                const newError = new AppError(error.message, 500);
+            }
         }
     },
     
-    async delete(req, res){
+    async delete(req: Request, res: Response){
         
         const {driver_id: UserId,car_id} = req.params;
         try {
-            await deleteCar({UserId, car_id});
+            await CarRepository.delete(Number(car_id), Number(UserId));
             return res.status(200).json({message: 'Car deleted'});
         } catch (error) {
             if(error.message == 'Driver not authorized' ){
                 return res.status(400).json(error.message);
             }
-            return res.status(error.statusCode).json(error.message);
+             if(error instanceof AppError){
+                return res.status(error.statusCode).json(error.message);
+            } else {
+                const newError = new AppError(error.message, 500);
+            }
         }
     },
 }

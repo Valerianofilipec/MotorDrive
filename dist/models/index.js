@@ -1,0 +1,23 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CarModel = exports.DriverInfoModel = exports.UserModel = exports.sequelize = void 0;
+const sequelize_typescript_1 = require("sequelize-typescript");
+const User_1 = require("./User");
+const Car_1 = require("./Car");
+const DriverInfo_1 = require("./DriverInfo");
+const env = process.env.NODE_ENV || 'development';
+const config = require(__dirname + '/../db/config/config.js')[env];
+const sequelize = new sequelize_typescript_1.Sequelize(config.database, config.username, config.password, config);
+exports.sequelize = sequelize;
+//Salada de conexão com o banco de dados e Associações
+sequelize.addModels([User_1.User, DriverInfo_1.DriverInfo, Car_1.Car]);
+User_1.User.hasOne(DriverInfo_1.DriverInfo, { foreignKey: 'UserId' });
+DriverInfo_1.DriverInfo.belongsTo(User_1.User, { foreignKey: 'UserId' });
+User_1.User.hasMany(Car_1.Car, { foreignKey: 'UserId' });
+Car_1.Car.belongsTo(User_1.User, { foreignKey: 'UserId' });
+const UserModel = sequelize.model('User');
+exports.UserModel = UserModel;
+const DriverInfoModel = sequelize.model('DriverInfo');
+exports.DriverInfoModel = DriverInfoModel;
+const CarModel = sequelize.model('Car');
+exports.CarModel = CarModel;
