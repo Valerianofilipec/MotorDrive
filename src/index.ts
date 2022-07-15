@@ -13,7 +13,7 @@ app.use(routes);
 
 //wait 0'clock (seconds)
 //while(new Date().getSeconds() != 0 ){};
-//checkTokens();
+checkTokens();
 
 app.listen(port,async()=>{
     console.log(`MotorDrive's Server running!${port}`);

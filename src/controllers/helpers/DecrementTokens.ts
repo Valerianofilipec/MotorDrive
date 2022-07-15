@@ -23,4 +23,7 @@ export const decrementExpiredTokens = async ()=>{
     }
 }
 
-export const checkTokens = () => setInterval(decrementExpiredTokens, 60*1000);
+export const checkTokens = () => setInterval(()=>{
+    decrementExpiredTokens();
+    console.log("decrementing tokens...")
+}, 59*1000);
