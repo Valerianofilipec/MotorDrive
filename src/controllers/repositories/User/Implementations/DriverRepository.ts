@@ -30,7 +30,7 @@ class DriverRepository implements IDriverRepository{
                 }
             }
 
-            const passwordHash = await hash(password, process.env.BCRYPT_SALT);
+            const passwordHash = await hash(password, Number(process.env.BCRYPT_SALT));
 
             if(carsArray.length != 0){
                 //create de user.driver
@@ -94,12 +94,12 @@ class DriverRepository implements IDriverRepository{
             throw new AppError('DriverInfo not found',404);
         }
 
-        const passwordHash = password && await hash(password, process.env.BCRYPT_SALT);
+        const passwordHash = password && await hash(password, Number(process.env.BCRYPT_SALT));
 
         try {
             let driverUpdated: User;
             if(password){
-                const passwordHash = await hash(password, process.env.BCRYPT_SALT);
+                const passwordHash = await hash(password, Number(process.env.BCRYPT_SALT));
                 driverUpdated =  Object.assign(driver, {
                     password: passwordHash, 
                     ...others,
