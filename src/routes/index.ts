@@ -8,7 +8,7 @@ import { ensureAuth } from './middlewares/ensureAuth';
 const routes = Router();
 
 routes.use(authenticateRouter);
-routes.use(ensureAuth); // ensure loged user token
+//routes.use(ensureAuth); // ensure loged user token
 routes.use('/manager', managerRouter);
 routes.use('/drivers', driverRouter);
 routes.use('/cars', carRouter);

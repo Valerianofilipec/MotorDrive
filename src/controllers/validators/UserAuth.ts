@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import { compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import { User} from '../../models/User';
+import { getRedis, keysRedis, setRedis } from '../../db/cache/redisConfig';
 
 
 export default {
@@ -28,13 +29,11 @@ export default {
                 email: user.email,
                 userType: user.userType
             }},"4602bcc8edfaf52d4bf84330f90e6e1d", {
-                expiresIn: '1h',
-            }); 
+                expiresIn: `${59 - (new Date().getSeconds())}s`,
+            });
             
             //save the user token (w/ not crucial info) to redis, to verify every hour!
-        /*
-            
-        */
+            await setRedis(`UserId_${user.id}`, token);
             
             return res.status(200).json({user:{
                 id: user.id,
@@ -50,9 +49,9 @@ export default {
     async logedUsers(req:Request, res:Response){
         
         try {
-            //require the token_Array (of all loged users)
-            const tokenArray : string[] = [] // from redis 
-            
+            //require the keys of all loged users (from redis)
+            const tokenArray :string[] = await keysRedis(`UserId_*`);
+            console.log(tokenArray);
             return res.status(201).json(tokenArray.length);
         } catch (error) {
             return res.status(500).json({error: 'Error reading the Token_Array!'});            
