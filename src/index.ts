@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(routes);
 
 //wait 0'clock (seconds)
-//while(new Date().getSeconds() != 0 ){};
+while(new Date().getSeconds() != 0 ){};//Tips: better using a cron job libraty
 checkTokens();
 
 app.listen(port,async()=>{

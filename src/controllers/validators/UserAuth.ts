@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import { User} from '../../models/User';
-import { getRedis, keysRedis, setRedis } from '../../db/cache/redisConfig';
+import { keysRedis, setRedis } from '../../db/cache/redisConfig';
 
 
 export default {
@@ -28,7 +28,7 @@ export default {
                 id: user.id,
                 email: user.email,
                 userType: user.userType
-            }},"4602bcc8edfaf52d4bf84330f90e6e1d", {
+            }},process.env.JWT_SECRET, {
                 expiresIn: `${59 - (new Date().getSeconds())}s`,
             });
             

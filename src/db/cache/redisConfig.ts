@@ -2,12 +2,10 @@ import 'dotenv/config'
 import { promisify } from 'util';
 import Redis, { Callback } from "ioredis";
 
-//env variables
-const password = process.env.REDIS_PASSWORD;
-
-
 const redisClient = new Redis({
-    password: password,
+    host:process.env.REDIS_HOST,
+    password: process.env.REDIS_PASSWORD,
+    db:Number(process.env.REDIS_DB)
 });
 
 //Promisify redisClient.get(value:string)

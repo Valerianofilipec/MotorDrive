@@ -1,6 +1,7 @@
 'use strict';
-
+require('dotenv/config');
 const { hash } = require("bcrypt");
+
 
 module.exports = {
   async up (queryInterface, Sequelize) {
@@ -8,7 +9,7 @@ module.exports = {
       await queryInterface.bulkInsert('User', [{
         name: 'Valeriano',
         email:'vfc@gmail.com',
-        password: await hash('banana', 10),
+        password: await hash('banana', Number(process.env.BCRYPT_SALT)),
         userType: 'manager',
         createdAt: new Date(),
         updatedAt: new Date()
